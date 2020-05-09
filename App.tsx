@@ -1,11 +1,22 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet } from 'react-native';
+import { AppLoading } from 'expo';
+import { loadFonts } from './src/utils/fonts';
+import Home from './src/screens/home/home';
 
 export default function App() {
+  const [dataLoaded, setDataLoaded] = useState(false);
+  if(!dataLoaded) {
+    return (
+      <AppLoading
+        startAsync={loadFonts}
+        onFinish={() => setDataLoaded(true)}>
+      </AppLoading>
+    );
+  }
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-    </View>
+    <Home></Home>
   );
 }
 

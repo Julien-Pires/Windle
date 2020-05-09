@@ -9,7 +9,9 @@ export default function App() {
   if(!dataLoaded) {
     return (
       <AppLoading
-        startAsync={loadFonts}
+        startAsync={async() => {
+          await loadFonts();
+        }}
         onFinish={() => setDataLoaded(true)}>
       </AppLoading>
     );

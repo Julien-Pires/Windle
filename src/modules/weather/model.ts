@@ -9,3 +9,20 @@ export enum WeatherCondition {
     Sandstorm,
     Tornado
 }
+
+export interface WeatherInfo {
+    city: string,
+    time: Date,
+    temperature: number,
+    minTemperature: number,
+    maxTemperature: number,
+}
+
+export enum WeatherErrorKind {
+    NotFound
+}
+
+export interface WeatherError {
+    kind: WeatherErrorKind,
+    detail: string | undefined
+}

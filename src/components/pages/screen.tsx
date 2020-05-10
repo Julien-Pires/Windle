@@ -1,8 +1,8 @@
 import React from 'react';
-import { WeatherConditionBackground } from '../components/atoms/WeatherConditionBackground';
-import { WeatherCondition } from '../modules/weather';
+import { WeatherConditionBackground } from '../atoms/WeatherConditionBackground';
+import { WeatherCondition } from '../../modules/weather';
 import { SafeAreaView } from 'react-native';
-import { Period } from '../modules/time';
+import { Period } from '../../modules/time';
 
 export const Screen = (props: React.PropsWithChildren<{}>) => {
     return (

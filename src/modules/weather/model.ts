@@ -1,3 +1,9 @@
+export enum TemperatureMetrics {
+    Kelvin,
+    Celsius,
+    Fahrenheit
+}
+
 export enum WeatherCondition {
     Clear,
     Hot,

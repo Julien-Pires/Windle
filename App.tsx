@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { StyleSheet } from 'react-native';
 import { AppLoading } from 'expo';
 import { loadFonts } from './src/utils/fonts';
-import Home from './src/screens/home/home';
+import { Home } from './src/components/pages/home';
 
 export default function App() {
   const [dataLoaded, setDataLoaded] = useState(false);
@@ -21,12 +20,3 @@ export default function App() {
     <Home></Home>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

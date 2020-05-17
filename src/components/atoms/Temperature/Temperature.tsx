@@ -1,21 +1,32 @@
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 import { Text, StyleProp, TextStyle } from 'react-native';
 
+export enum SymbolDisplay {
+    None,
+    Short,
+    Full
+}
+
 export interface TemperatureProps {
-    value: number,
-    displaySymbol?: boolean,
+    symbol?: SymbolDisplay,
     style?: StyleProp<TextStyle>
 }
 
 export const Temperature = ({
-    value,
-    displaySymbol,
+    children,
+    symbol,
     style
-}: TemperatureProps) => {
-    const text = displaySymbol ? `${value.toString()}°C` : `${value.toString()}°`;
+}: PropsWithChildren<TemperatureProps>) => {
+    let textSymbol = '';
+    if(symbol === SymbolDisplay.Short) {
+        textSymbol = '°';
+    } else if(symbol === SymbolDisplay.Full) {
+        textSymbol = '°C';
+    }
+
     return (
         <Text style={style}>
-            {text}
+            {children}{textSymbol}
         </Text>
     );
 }

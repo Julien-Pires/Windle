@@ -1,27 +1,29 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Screen } from '../screen';
-import { TemperatureInfo } from '../../organisms/TemperatureInfo';
-import { HeaderBar } from '../../organisms/HeaderBar';
+import { View, StyleSheet, SafeAreaView } from 'react-native';
+import * as theme from '../../../styles/light';
+import { CityInfo } from '../../molecules';
+import { SimpleWeatherInfo } from '../../organisms';
 
 export const Home = () => {
     return (
-        <Screen>
-            <HeaderBar></HeaderBar>
-            <View style={styles.temperatureBlock}>
-                <TemperatureInfo />
-            </View>
-            <View style={styles.forecastBlock}></View>
-        </Screen>
+        <View style={styles.page}>
+            <SafeAreaView>
+                <CityInfo style={styles.cityInfo} />
+                <SimpleWeatherInfo style={styles.weather} />
+            </SafeAreaView>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
-    temperatureBlock: {
-        flex: 4,
-        justifyContent: 'center'
+    page: {
+        flex: 1,
+        backgroundColor: theme.colors.surface
     },
-    forecastBlock: {
-        flex: 1 
+    cityInfo: {
+        marginTop: 52
+    },
+    weather: {
+        marginTop: 34
     }
 })

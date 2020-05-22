@@ -1,23 +1,29 @@
 import React from 'react';
-import { View, Text, StyleSheet, StyleProp, ViewStyle } from 'react-native';
+import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import * as theme from '../../../styles/light';
-import { Temperature, SymbolDisplay } from '../../atoms';
+import { Temperature, SymbolDisplay, UpperText } from '../../atoms';
 import Rain from '../../../../assets/icons/weather/conditions/rain.svg';
+import { WeatherInfo, WeatherCondition as wc, WeatherSky, WeatherConditionKind } from '../../../modules/weather';
 
 export interface WeatherConditionProps {
+    weather: WeatherInfo,
     style?: StyleProp<ViewStyle>
 }
 
-export const WeatherCondition = ({ style }: WeatherConditionProps) => {
+export const WeatherCondition = ({
+    weather,
+    style
+}: WeatherConditionProps) => {
+    const condition = getConditionDescription(weather.condition, weather.sky);
+
     return (
         <View style={StyleSheet.flatten([styles.container, style])}>
-            <Rain height={190} width={190}></Rain>
-            <Temperature 
+            <Rain height={190} width={190} />
+            <Temperature
                 style={styles.temperature}
-                symbol={SymbolDisplay.Full}>
-                55
-            </Temperature>
-            <Text style={styles.condition}>SUN & RAIN</Text>
+                temperature={weather.temperature.current}
+                display={SymbolDisplay.Full} />
+            <UpperText style={styles.condition}>{condition}</UpperText>
         </View>
     );
 }
@@ -36,3 +42,11 @@ const styles = StyleSheet.create({
         color: theme.colors.onSurface
     }
 });
+
+const getConditionDescription = (condition: wc, sky: WeatherSky) => {
+    if(condition.kind !== WeatherConditionKind.None) {
+        return condition.description;
+    }
+
+    return sky.kind === 'clear' ? 'clear' : 'cloudy';
+}

@@ -1,7 +1,7 @@
-import React from 'react';
 import _ from 'lodash';
-import * as theme from '../../../styles/light';
+import React from 'react';
 import { StyleSheet, View, Text, StyleProp, ViewStyle } from "react-native";
+import * as theme from '../../../styles/light';
 import DayTime from '../../../../assets/icons/weather/lineal/daytime.svg';
 import { Divider } from '../../atoms';
 

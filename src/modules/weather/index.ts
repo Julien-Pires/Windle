@@ -1,3 +1,2 @@
-export * from './metrics';
 export * from './model';
-export * from './query';
+export * from './provider';

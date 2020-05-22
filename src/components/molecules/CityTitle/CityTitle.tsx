@@ -1,16 +1,21 @@
 import React from 'react';
-import { View, Text, StyleSheet, StyleProp, ViewStyle } from 'react-native';
+import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import * as theme from '../../../styles/light';
+import { UpperText } from '../../atoms';
 
-export interface CityInfoProps {
+export interface CityTitleProps {
+    city: string,
     style?: StyleProp<ViewStyle>
 }
 
-export const CityInfo = ({ style }: CityInfoProps) => {
+export const CityTitle = ({
+    city,
+    style 
+}: CityTitleProps) => {
     return (
         <View style={StyleSheet.flatten([styles.container, style])}>
-            <Text style={styles.city}>PARIS</Text>
-            <Text style={styles.date}>TUESDAY 9:00 AM</Text>
+            <UpperText style={styles.city}>{city}</UpperText>
+            <UpperText style={styles.date}>Tuesday 9:00 am</UpperText>
         </View>
     );
 }

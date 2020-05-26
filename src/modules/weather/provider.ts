@@ -1,15 +1,23 @@
 import * as network from '../../utils/network';
-import { WeatherInfo, WeatherError, WeatherErrorKind, WeatherSky, CloudsQuantity, WeatherCondition, WeatherConditionKind } from './model';
+import { 
+    WeatherInfo, 
+    WeatherError, 
+    WeatherErrorKind, 
+    WeatherCondition, 
+    WeatherConditionKind, 
+    Clouds,
+    Sky
+} from './model';
 import { Result, ResultKind } from '../../utils/types';
 
 const openWeatherUrl = 'https://api.openweathermap.org/data/2.5/weather';
 const apiKey = 'f57316e024e87ad5ea0e12c5c8560426';
 
 const cloudsQuantity = new Map([
-    [801, CloudsQuantity.Few],
-    [802, CloudsQuantity.Broken],
-    [803, CloudsQuantity.Scattered],
-    [804, CloudsQuantity.Overcast]
+    [801, Clouds.Few],
+    [802, Clouds.Broken],
+    [803, Clouds.Scattered],
+    [804, Clouds.Overcast]
 ])
 
 const weatherConditions : [number, number, WeatherConditionKind][] = [
@@ -18,7 +26,9 @@ const weatherConditions : [number, number, WeatherConditionKind][] = [
     [502, 504, WeatherConditionKind.HeavyRain],
     [511, 511, WeatherConditionKind.FreezingRain],
     [520, 531, WeatherConditionKind.ShowerRain],
-    [600, 622, WeatherConditionKind.Snow]
+    [600, 622, WeatherConditionKind.Snow],
+    [800, 800, WeatherConditionKind.Clear],
+    [801, 804, WeatherConditionKind.Cloudy]
 ]
 
 export const getCurrentWeather = async (city: string): Promise<Result<WeatherInfo, WeatherError>> => {
@@ -29,6 +39,7 @@ export const getCurrentWeather = async (city: string): Promise<Result<WeatherInf
             const data = response.data;
             const sky = getSky(data.weather);
             const condition = getWeatherCondition(data.weather);
+            
             return {
                 kind: ResultKind.Success,
                 data: {
@@ -55,31 +66,36 @@ export const getCurrentWeather = async (city: string): Promise<Result<WeatherInf
     }
 }
 
-const getSky = (weather: any[]) : WeatherSky => {
-    const clouds = weather.find(c => cloudsQuantity.has(c.id));
-    if(clouds) {
-        return {
-            kind: 'clouds',
-            quantity: clouds ?? CloudsQuantity.Few
-        }
+const getSky = (weather: any[]) : Sky => {
+    const clouds = weather.map(c => cloudsQuantity.get(c.id)).filter((c) : c is Clouds => c !== undefined);
+    if(!clouds) {
+        return { clouds: Clouds.None };
     }
 
-    return { kind: 'clear' };  
+    return { clouds: clouds[0] }; 
 }
 
 const getWeatherCondition = (weathers: any[]) : WeatherCondition => {
-    const condition = weathers.find(findWeathercCondition);
-    if(!condition) {
+    const results = weathers.map((c) : WeatherCondition => {
+        const condition = findWeathercCondition(c);
+        return { 
+            kind: condition,
+            description: c.description
+        }
+    })
+    
+    if(!results) {
         return {
-            kind: WeatherConditionKind.None,
-            description: ''
+            kind: WeatherConditionKind.Clear,
+            description: 'Clear'
         }
     }
-    
-    return {
-        kind: findWeathercCondition(condition),
-        description: condition.description
-    };
+
+    if(results.length >= 2) {
+        return results.filter(c => c.kind !== WeatherConditionKind.Cloudy)[0];
+    }
+
+    return results[0];
 }
 
 const findWeathercCondition = (weather: any) : WeatherConditionKind => {
@@ -92,7 +108,7 @@ const findWeathercCondition = (weather: any) : WeatherConditionKind => {
         return condition;
     }
 
-    return WeatherConditionKind.None;
+    return WeatherConditionKind.Clear;
 }
 
 const fetch = async (params: object) => {

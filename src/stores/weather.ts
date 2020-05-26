@@ -12,6 +12,5 @@ export class WeatherStore {
     async loadWeather(city: string) {
         const result = await getCurrentWeather(city);
         this.weather = result.kind === ResultKind.Success ? result.data : undefined;
-        console.log(this.weather);
     }
 }

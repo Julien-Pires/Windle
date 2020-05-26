@@ -4,28 +4,17 @@ export enum TemperatureMetrics {
     Fahrenheit
 }
 
-export enum CloudsQuantity {
+export enum Clouds {
+    None,
     Few,
     Scattered,
     Broken,
     Overcast
 }
 
-export interface ClearSky {
-    kind: 'clear'
-}
-
-export interface Clouds {
-    kind: 'clouds',
-    quantity: CloudsQuantity
-}
-
-export type WeatherSky =
-    | ClearSky
-    | Clouds
-
 export enum WeatherConditionKind {
-    None,
+    Clear,
+    Cloudy,
     FreezingRain,
     HeavyRain,
     LightRain,
@@ -39,6 +28,10 @@ export interface WeatherCondition {
     description: string
 }
 
+export interface Sky {
+    clouds: Clouds
+}
+
 export interface Temperature {
     current: number,
     min: number,
@@ -50,7 +43,7 @@ export interface WeatherInfo {
     time: Date,
     temperature: Temperature,
     condition: WeatherCondition,
-    sky: WeatherSky
+    sky: Sky
 }
 
 export enum WeatherErrorKind {

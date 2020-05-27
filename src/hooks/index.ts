@@ -1,7 +1,8 @@
 import React from 'react';
-import { WeatherStore, UIStore } from '../stores';
+import { WeatherStore, UIStore, SystemStore } from '../stores';
 
 const storesContext = React.createContext({
+    system: new SystemStore(),
     UIStore: new UIStore(),
     weatherStore: new WeatherStore()
 })

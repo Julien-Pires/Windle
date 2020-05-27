@@ -1,3 +1,4 @@
+export * from './DateText';
 export * from './Divider';
 export * from './Temperature';
 export * from './UpperText';

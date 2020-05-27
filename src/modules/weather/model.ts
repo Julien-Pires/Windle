@@ -1,3 +1,10 @@
+import { Zone } from "luxon";
+
+export interface City {
+    name: string,
+    timezone: Zone
+}
+
 export enum TemperatureMetrics {
     Kelvin,
     Celsius,
@@ -39,8 +46,7 @@ export interface Temperature {
 }
 
 export interface WeatherInfo {
-    city: string,
-    time: Date,
+    city: City,
     temperature: Temperature,
     condition: WeatherCondition,
     sky: Sky

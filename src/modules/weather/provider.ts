@@ -9,6 +9,7 @@ import {
     Sky
 } from './model';
 import { Result, ResultKind } from '../../utils/types';
+import { FixedOffsetZone } from 'luxon';
 
 const openWeatherUrl = 'https://api.openweathermap.org/data/2.5/weather';
 const apiKey = 'f57316e024e87ad5ea0e12c5c8560426';
@@ -43,8 +44,10 @@ export const getCurrentWeather = async (city: string): Promise<Result<WeatherInf
             return {
                 kind: ResultKind.Success,
                 data: {
-                    city: data.name,
-                    time: new Date(Date.now()),
+                    city: { 
+                        name: data.name,
+                        timezone: FixedOffsetZone.instance(data.timezone / 60)
+                    },
                     temperature: {
                         current: data.main.temp,
                         min: data.main.temp_min,

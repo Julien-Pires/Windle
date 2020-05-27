@@ -1,21 +1,28 @@
 import React from 'react';
 import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
+import { DateTime } from 'luxon';
 import * as theme from '../../../styles/light';
-import { UpperText } from '../../atoms';
+import { DateText, UpperText } from '../../atoms';
+import { City } from '../../../modules/weather';
 
 export interface CityTitleProps {
-    city: string,
+    city: City,
+    date: DateTime,
     style?: StyleProp<ViewStyle>
 }
 
 export const CityTitle = ({
     city,
-    style 
+    date,
+    style
 }: CityTitleProps) => {
     return (
         <View style={StyleSheet.flatten([styles.container, style])}>
-            <UpperText style={styles.city}>{city}</UpperText>
-            <UpperText style={styles.date}>Tuesday 9:00 am</UpperText>
+            <UpperText style={styles.city}>{city.name}</UpperText>
+            <DateText 
+                style={styles.date} 
+                date={date} 
+                timezone={city.timezone} />
         </View>
     );
 }

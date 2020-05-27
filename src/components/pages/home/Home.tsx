@@ -8,14 +8,15 @@ import { SimpleWeatherInfo } from '../../organisms';
 import { useStores } from '../../../hooks';
 
 export const Home = observer(() => {
-    const { weatherStore } = useStores();
+    const { system, weatherStore } = useStores();
     if(weatherStore.weather) {
         return (
             <View style={styles.page}>
                 <SafeAreaView>
                     <CityTitle
                         style={styles.cityInfo}
-                        city={weatherStore.weather.city} />
+                        city={weatherStore.weather.city}
+                        date={system.date} />
                     <SimpleWeatherInfo style={styles.weather} weather={weatherStore.weather} />
                 </SafeAreaView>
             </View>

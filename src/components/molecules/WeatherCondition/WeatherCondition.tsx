@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import * as theme from '../../../styles/light';
-import { Temperature, SymbolDisplay, UpperText, WeatherConditionIcon } from '../../atoms';
+import { TemperatureText, SymbolDisplay, UpperText, WeatherConditionIcon } from '../../atoms';
 import { WeatherInfo } from '../../../modules/weather';
 import { Period } from '../../../modules/time';
 
@@ -22,7 +22,7 @@ export const WeatherCondition = ({
                 period={Period.Day}
                 height={190}
                 width={190} />
-            <Temperature
+            <TemperatureText
                 style={styles.temperature}
                 temperature={weather.temperature.current}
                 display={SymbolDisplay.Full} />

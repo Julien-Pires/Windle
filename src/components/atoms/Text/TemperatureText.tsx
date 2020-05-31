@@ -1,30 +1,27 @@
 import React from 'react';
 import { StyleProp, TextStyle } from 'react-native';
 import { observer } from 'mobx-react-lite';
-import { UpperText } from '../UpperText';
+import { UpperText } from './UpperText';
 import { useStores } from '../../../hooks';
-import { TemperatureMetrics } from '../../../modules/weather';
+import { Temperature, TemperatureMetrics, TemperatureModule } from '../../../modules/weather';
+import { SymbolDisplay } from './shared';
 
-export enum SymbolDisplay {
-    None,
-    Short,
-    Full
-}
-
-export interface TemperatureProps {
-    temperature: number,
+export interface TemperatureTextProps {
+    temperature: Temperature,
     display?: SymbolDisplay,
     style?: StyleProp<TextStyle>
 }
 
-export const Temperature = observer(({
+export const TemperatureText = observer(({
     temperature,
     display,
     style
-}: TemperatureProps) => {
-    const store = useStores().UIStore;
-    const symbol = getSymbol(store.temperature, display ?? SymbolDisplay.Full);
-    const value = getTemperature(temperature, store.temperature);
+}: TemperatureTextProps) => {
+    const { UIStore } = useStores();
+    const symbol = getSymbol(UIStore.temperature, display ?? SymbolDisplay.Full);
+    const value = UIStore.temperature === TemperatureMetrics.Celsius 
+        ? TemperatureModule.toCelsius(temperature) 
+        : TemperatureModule.toFahrenheit(temperature);
 
     return (
         <UpperText style={style}>
@@ -32,18 +29,6 @@ export const Temperature = observer(({
         </UpperText>
     );
 })
-
-function getTemperature(temperature: number, kind: TemperatureMetrics): number {
-    switch(kind) {
-        case TemperatureMetrics.Celsius:
-            return temperature - 273.15;
-
-        case TemperatureMetrics.Fahrenheit:
-            return (temperature - 273.15) * 9/5 + 32;
-    }
-
-    return temperature;
-}
 
 function getSymbol(kind: TemperatureMetrics, display: SymbolDisplay) {
     switch(kind) {

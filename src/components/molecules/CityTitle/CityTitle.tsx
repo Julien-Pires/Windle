@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import { DateTime } from 'luxon';
 import * as theme from '../../../styles/light';
-import { DateText, UpperText } from '../../atoms';
+import { DateTimeText, UpperText, DateTimeDisplay } from '../../atoms';
 import { City } from '../../../modules/weather';
 
 export interface CityTitleProps {
@@ -19,10 +19,10 @@ export const CityTitle = ({
     return (
         <View style={StyleSheet.flatten([styles.container, style])}>
             <UpperText style={styles.city}>{city.name}</UpperText>
-            <DateText 
+            <DateTimeText 
                 style={styles.date} 
                 date={date} 
-                timezone={city.timezone} />
+                display={DateTimeDisplay.DateTime} />
         </View>
     );
 }

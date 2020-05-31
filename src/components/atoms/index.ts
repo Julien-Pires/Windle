@@ -1,5 +1,3 @@
-export * from './DateText';
 export * from './Divider';
-export * from './Temperature';
-export * from './UpperText';
+export * from './Text';
 export * from './WeatherConditionIcon';

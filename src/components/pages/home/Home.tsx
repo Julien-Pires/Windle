@@ -9,6 +9,7 @@ import { useStores } from '../../../hooks';
 
 export const Home = observer(() => {
     const { system, weatherStore } = useStores();
+
     if(weatherStore.weather) {
         return (
             <View style={styles.page}>
@@ -16,7 +17,7 @@ export const Home = observer(() => {
                     <CityTitle
                         style={styles.cityInfo}
                         city={weatherStore.weather.city}
-                        date={system.date} />
+                        date={system.date.setZone(weatherStore.weather.city.timezone)} />
                     <SimpleWeatherInfo style={styles.weather} weather={weatherStore.weather} />
                 </SafeAreaView>
             </View>

@@ -1,15 +1,15 @@
 import * as network from '../../utils/network';
-import { 
+import {
+    Clouds,
     WeatherInfo, 
     WeatherError, 
     WeatherErrorKind, 
     WeatherCondition, 
-    WeatherConditionKind, 
-    Clouds,
-    Sky
-} from './model';
+    WeatherConditionKind,
+    WeatherDataKind
+} from './models';
 import { Result, ResultKind } from '../../utils/types';
-import { FixedOffsetZone } from 'luxon';
+import { FixedOffsetZone, DateTime } from 'luxon';
 
 const openWeatherUrl = 'https://api.openweathermap.org/data/2.5/weather';
 const apiKey = 'f57316e024e87ad5ea0e12c5c8560426';
@@ -38,8 +38,6 @@ export const getCurrentWeather = async (city: string): Promise<Result<WeatherInf
     switch(response.kind) {
         case ResultKind.Success:
             const data = response.data;
-            const sky = getSky(data.weather);
-            const condition = getWeatherCondition(data.weather);
             
             return {
                 kind: ResultKind.Success,
@@ -49,12 +47,35 @@ export const getCurrentWeather = async (city: string): Promise<Result<WeatherInf
                         timezone: FixedOffsetZone.instance(data.timezone / 60)
                     },
                     temperature: {
-                        current: data.main.temp,
-                        min: data.main.temp_min,
-                        max: data.main.temp_max
+                        current: { 
+                            kind: WeatherDataKind.CurrentTemperature,
+                            value: data.main.temp
+                        },
+                        min: {
+                            kind: WeatherDataKind.MinTemperature,
+                            value: data.main.temp_min
+                        },
+                        max: {
+                            kind: WeatherDataKind.MaxTemperature,
+                            value: data.main.temp_max
+                        }
                     },
-                    sky: sky,
-                    condition: condition
+                    sky: {
+                        clouds: getClouds(data.weather),
+                        sunrise: {
+                            kind: WeatherDataKind.Sunrise,
+                            time: DateTime.fromSeconds(data.sys.sunrise)
+                        },
+                        sunset: {
+                            kind: WeatherDataKind.Sunset,
+                            time: DateTime.fromSeconds(data.sys.sunset)
+                        },
+                        wind: {
+                            kind: WeatherDataKind.Wind,
+                            speed: data.wind.speed
+                        }
+                    },
+                    condition: getWeatherCondition(data.weather)
                 }
             }
 
@@ -69,13 +90,10 @@ export const getCurrentWeather = async (city: string): Promise<Result<WeatherInf
     }
 }
 
-const getSky = (weather: any[]) : Sky => {
+const getClouds = (weather: any[]) : Clouds => {
     const clouds = weather.map(c => cloudsQuantity.get(c.id)).filter((c) : c is Clouds => c !== undefined);
-    if(!clouds) {
-        return { clouds: Clouds.None };
-    }
 
-    return { clouds: clouds[0] }; 
+    return clouds ? clouds[0] : Clouds.None; 
 }
 
 const getWeatherCondition = (weathers: any[]) : WeatherCondition => {

@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View, StyleProp, ViewStyle } from "react-native";
 import * as theme from '../../../styles/light';
 import { Divider } from '../../atoms';
-import { WeatherCondition, WeatherInfoGrid } from '../../molecules';
+import { WeatherCondition, WeatherDataGrid } from '../../molecules';
 import { WeatherInfo } from '../../../modules/weather';
 
 export interface SimpleWeatherInfoProps {
@@ -18,7 +18,11 @@ export const SimpleWeatherInfo = ({
         <View style={style}>
             <WeatherCondition weather={weather} />
             <Divider style={styles.divider} />
-            <WeatherInfoGrid values={[ '6.00', '9.00', '7.00' ]} />
+            <WeatherDataGrid values={[
+                weather.temperature.min,
+                weather.sky.wind,
+                weather.temperature.max
+            ]} />
         </View>
     );
 }

@@ -1,3 +1,3 @@
 export * from './CityTitle';
 export * from './WeatherCondition';
-export * from './WeatherInfoGrid';
+export * from './WeatherDataGrid';

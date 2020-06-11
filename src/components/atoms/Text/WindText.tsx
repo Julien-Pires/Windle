@@ -1,9 +1,10 @@
 import React from 'react';
-import { Wind, WindMetrics, WindModule } from "../../../modules/weather";
-import { useStores } from '../../../hooks';
-import { UpperText } from './UpperText';
-import { SymbolDisplay } from './shared';
 import { StyleProp, TextStyle } from 'react-native';
+
+import { Wind, WindMetrics, WindModule } from '../../../modules/weather';
+import { useStores } from '../../../stores';
+import { SymbolDisplay } from './shared';
+import { UpperText } from './UpperText';
 
 export interface WindTextProps {
     wind: Wind,

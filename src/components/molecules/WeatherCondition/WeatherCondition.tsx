@@ -1,19 +1,26 @@
+import _ from 'lodash';
+import { observer } from 'mobx-react-lite';
 import React from 'react';
-import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
-import * as theme from '../../../styles/light';
-import { TemperatureText, SymbolDisplay, UpperText, WeatherConditionIcon } from '../../atoms';
-import { WeatherInfo } from '../../../modules/weather';
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+
 import { Period } from '../../../modules/time';
+import { WeatherInfo } from '../../../modules/weather';
+import { useStores } from '../../../stores';
+import { Theme } from '../../../styles/theme';
+import { SymbolDisplay, TemperatureText, UpperText, WeatherConditionIcon } from '../../atoms';
 
 export interface WeatherConditionProps {
     weather: WeatherInfo,
     style?: StyleProp<ViewStyle>
 }
 
-export const WeatherCondition = ({
+export const WeatherCondition = observer(({
     weather,
     style
 }: WeatherConditionProps) => {
+    const { UIStore } = useStores();
+    const styles = stylesheet(UIStore.theme);
+
     return (
         <View style={StyleSheet.flatten([styles.container, style])}>
             <WeatherConditionIcon
@@ -29,19 +36,21 @@ export const WeatherCondition = ({
             <UpperText style={styles.condition}>{weather.condition.description}</UpperText>
         </View>
     );
-}
+})
 
-const styles = StyleSheet.create({
-    container: {
-        alignItems: 'center'
-    },
-    temperature: {
-        ...theme.text.light.H3,
-        color: theme.colors.onSurface,
-        marginTop: 42
-    },
-    condition: {
-        ...theme.text.normal.Body1,
-        color: theme.colors.onSurface
-    }
+const stylesheet = _.memoize((theme: Theme) => {
+    return StyleSheet.create({
+        container: {
+            alignItems: 'center'
+        },
+        temperature: {
+            ...theme.font.light.H3,
+            color: theme.colors.onSurface,
+            marginTop: 42
+        },
+        condition: {
+            ...theme.font.normal.Body1,
+            color: theme.colors.onSurface
+        }
+    });
 });

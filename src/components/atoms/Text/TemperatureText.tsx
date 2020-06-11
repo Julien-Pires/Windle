@@ -1,10 +1,11 @@
+import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { StyleProp, TextStyle } from 'react-native';
-import { observer } from 'mobx-react-lite';
-import { UpperText } from './UpperText';
-import { useStores } from '../../../hooks';
+
 import { Temperature, TemperatureMetrics, TemperatureModule } from '../../../modules/weather';
+import { useStores } from '../../../stores';
 import { SymbolDisplay } from './shared';
+import { UpperText } from './UpperText';
 
 export interface TemperatureTextProps {
     temperature: Temperature,

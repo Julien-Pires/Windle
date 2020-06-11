@@ -1,20 +1,11 @@
 import React from 'react';
-import { SvgProps } from "react-native-svg";
-import { WeatherConditionKind, Clouds, Sky } from "../../../modules/weather";
-import { Period } from "../../../modules/time";
-import { 
-    Sun, 
-    NightHalf, 
-    NightFull, 
-    FewClouds, 
-    BrokenClouds, 
-    OvercastClouds, 
-    Rain,
-    HeavyRain,
-    FreezingRain,
-    ShowerRain,
-    Snow,
-    Storm 
+import { SvgProps } from 'react-native-svg';
+
+import { Period } from '../../../modules/time';
+import { Clouds, Sky, WeatherConditionKind } from '../../../modules/weather';
+import {
+    BrokenClouds, FewClouds, FreezingRain, HeavyRain, NightFull, NightHalf, OvercastClouds, Rain,
+    ShowerRain, Snow, Storm, Sun
 } from '../../../styles/icons/conditions';
 
 export interface WeatherConditionIconProps extends SvgProps {

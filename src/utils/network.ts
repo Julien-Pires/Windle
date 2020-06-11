@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { ResultKind, Result } from './types';
+
+import { Result, ResultKind } from './types';
 
 export const query = async (url: string, query: object): Promise<Result<any, string>> => {
     try {

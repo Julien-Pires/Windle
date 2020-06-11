@@ -1,8 +1,9 @@
 import _ from 'lodash';
 import React from 'react';
-import { View, StyleProp, ViewStyle } from "react-native";
-import { WeatherDataGridRow } from './WeatherDataRow';
+import { StyleProp, View, ViewStyle } from 'react-native';
+
 import { WeatherData } from '../../../modules/weather';
+import { WeatherDataGridRow } from './WeatherDataRow';
 
 export interface WeatherDataGridProps {
     values: WeatherData[],

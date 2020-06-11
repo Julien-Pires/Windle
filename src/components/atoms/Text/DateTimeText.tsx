@@ -1,6 +1,7 @@
+import { DateTime } from 'luxon';
 import React from 'react';
-import { StyleProp, TextStyle } from "react-native";
-import { DateTime, Zone } from 'luxon';
+import { StyleProp, TextStyle } from 'react-native';
+
 import { UpperText } from './UpperText';
 
 export enum DateTimeDisplay {

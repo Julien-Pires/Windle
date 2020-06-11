@@ -1,19 +1,26 @@
+import _ from 'lodash';
+import { observer } from 'mobx-react-lite';
 import React from 'react';
-import { StyleSheet, View, StyleProp, ViewStyle } from "react-native";
-import * as theme from '../../../styles/light';
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+
+import { WeatherInfo } from '../../../modules/weather';
+import { useStores } from '../../../stores';
+import { Theme } from '../../../styles/theme';
 import { Divider } from '../../atoms';
 import { WeatherCondition, WeatherDataGrid } from '../../molecules';
-import { WeatherInfo } from '../../../modules/weather';
 
 export interface SimpleWeatherInfoProps {
     weather: WeatherInfo,
     style: StyleProp<ViewStyle>
 }
 
-export const SimpleWeatherInfo = ({
+export const SimpleWeatherInfo = observer(({
     weather,
     style
 }: SimpleWeatherInfoProps) => {
+    const { UIStore } = useStores();
+    const styles = stylesheet(UIStore.theme);
+
     return (
         <View style={style}>
             <WeatherCondition weather={weather} />
@@ -25,15 +32,17 @@ export const SimpleWeatherInfo = ({
             ]} />
         </View>
     );
-}
+});
 
-const styles = StyleSheet.create({
-    divider: {
-        height: 1,
-        width: 40,
-        marginTop: 34,
-        marginBottom: 34,
-        alignSelf: 'center',
-        backgroundColor: theme.colors.onSurface
-    }
+const stylesheet = _.memoize((theme: Theme) => {    
+    return StyleSheet.create({
+        divider: {
+            height: 1,
+            width: 40,
+            marginTop: 34,
+            marginBottom: 34,
+            alignSelf: 'center',
+            backgroundColor: theme.colors.onSurface
+        }
+    });
 });

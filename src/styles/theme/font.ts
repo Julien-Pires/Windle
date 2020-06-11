@@ -1,5 +1,7 @@
 import { StyleSheet } from 'react-native';
 
+import { FontSizes } from '.';
+
 const lightFont = {
     fontFamily: 'Rehn-Light'
 }
@@ -12,7 +14,7 @@ const boldFont = {
     fontFamily: 'Rehn-Bold'
 }
 
-const fontSize = (font: { fontFamily: string }) => ({
+const fontSize = (font: { fontFamily: string }) : FontSizes => ({
     Body1: { ...font, fontSize: 16 },
     Body2: { ...font, fontSize: 14 },
     Button: { ...font, fontSize: 14 },
@@ -25,7 +27,7 @@ const fontSize = (font: { fontFamily: string }) => ({
     H6: { ...font, fontSize: 20 }
 })
 
-export const text = {
+export default {
     light: StyleSheet.create(fontSize(lightFont)),
     normal: StyleSheet.create(fontSize(normalFont)),
     bold: StyleSheet.create(fontSize(boldFont))

@@ -1,14 +1,14 @@
+import { DateTime } from 'luxon';
 import { observable } from 'mobx';
 import { interval } from 'rxjs';
-import { DateTime } from 'luxon';
 
-const refreshRate = 5000;
+export class TimeStore {
+    private readonly _refreshRate = 5000;
 
-export class SystemStore {
     @observable date : DateTime = DateTime.utc();
 
     constructor() {
-        interval(refreshRate).subscribe(_ => {
+        interval(this._refreshRate).subscribe(_ => {
             this.date = DateTime.utc();
         });
     }

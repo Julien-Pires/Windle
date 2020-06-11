@@ -86,7 +86,7 @@ export type WeatherData =
     | Sunset
     | Wind
 
-export interface City {
+export interface CityInfo {
     name: string,
     timezone: Zone
 }
@@ -105,7 +105,6 @@ export interface DayTemperature {
 }
 
 export interface WeatherInfo {
-    city: City,
     condition: WeatherCondition,
     temperature: DayTemperature,
     sky: Sky

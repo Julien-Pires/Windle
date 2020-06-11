@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
 import { AppLoading } from 'expo';
-import { loadFonts } from './src/utils/fonts';
+import React, { useState } from 'react';
+
 import { Home } from './src/components/pages/home';
+import { loadFonts } from './src/utils/fonts';
 
 export default function App() {
   const [dataLoaded, setDataLoaded] = useState(false);
@@ -17,6 +18,6 @@ export default function App() {
   }
 
   return (
-    <Home></Home>
+    <Home />
   );
 }

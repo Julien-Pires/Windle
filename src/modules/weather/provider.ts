@@ -1,15 +1,11 @@
+import { DateTime, FixedOffsetZone } from 'luxon';
+
 import * as network from '../../utils/network';
-import {
-    Clouds,
-    WeatherInfo, 
-    WeatherError, 
-    WeatherErrorKind, 
-    WeatherCondition, 
-    WeatherConditionKind,
-    WeatherDataKind
-} from './models';
 import { Result, ResultKind } from '../../utils/types';
-import { FixedOffsetZone, DateTime } from 'luxon';
+import {
+    CityInfo, Clouds, WeatherCondition, WeatherConditionKind, WeatherDataKind, WeatherError,
+    WeatherErrorKind, WeatherInfo
+} from './models';
 
 const openWeatherUrl = 'https://api.openweathermap.org/data/2.5/weather';
 const apiKey = 'f57316e024e87ad5ea0e12c5c8560426';
@@ -32,7 +28,12 @@ const weatherConditions : [number, number, WeatherConditionKind][] = [
     [801, 804, WeatherConditionKind.Cloudy]
 ]
 
-export const getCurrentWeather = async (city: string): Promise<Result<WeatherInfo, WeatherError>> => {
+export interface WeatherResult {
+    city: CityInfo,
+    weather: WeatherInfo
+}
+
+export const getCurrentWeather = async (city: string): Promise<Result<WeatherResult, WeatherError>> => {
     const response = await fetch({ q: city });
 
     switch(response.kind) {
@@ -46,36 +47,38 @@ export const getCurrentWeather = async (city: string): Promise<Result<WeatherInf
                         name: data.name,
                         timezone: FixedOffsetZone.instance(data.timezone / 60)
                     },
-                    temperature: {
-                        current: { 
-                            kind: WeatherDataKind.CurrentTemperature,
-                            value: data.main.temp
+                    weather : {
+                        temperature: {
+                            current: { 
+                                kind: WeatherDataKind.CurrentTemperature,
+                                value: data.main.temp
+                            },
+                            min: {
+                                kind: WeatherDataKind.MinTemperature,
+                                value: data.main.temp_min
+                            },
+                            max: {
+                                kind: WeatherDataKind.MaxTemperature,
+                                value: data.main.temp_max
+                            }
                         },
-                        min: {
-                            kind: WeatherDataKind.MinTemperature,
-                            value: data.main.temp_min
+                        sky: {
+                            clouds: getClouds(data.weather),
+                            sunrise: {
+                                kind: WeatherDataKind.Sunrise,
+                                time: DateTime.fromSeconds(data.sys.sunrise)
+                            },
+                            sunset: {
+                                kind: WeatherDataKind.Sunset,
+                                time: DateTime.fromSeconds(data.sys.sunset)
+                            },
+                            wind: {
+                                kind: WeatherDataKind.Wind,
+                                speed: data.wind.speed
+                            }
                         },
-                        max: {
-                            kind: WeatherDataKind.MaxTemperature,
-                            value: data.main.temp_max
-                        }
-                    },
-                    sky: {
-                        clouds: getClouds(data.weather),
-                        sunrise: {
-                            kind: WeatherDataKind.Sunrise,
-                            time: DateTime.fromSeconds(data.sys.sunrise)
-                        },
-                        sunset: {
-                            kind: WeatherDataKind.Sunset,
-                            time: DateTime.fromSeconds(data.sys.sunset)
-                        },
-                        wind: {
-                            kind: WeatherDataKind.Wind,
-                            speed: data.wind.speed
-                        }
-                    },
-                    condition: getWeatherCondition(data.weather)
+                        condition: getWeatherCondition(data.weather)
+                    }
                 }
             }
 

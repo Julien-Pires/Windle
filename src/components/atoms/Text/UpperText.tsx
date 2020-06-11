@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleProp, TextStyle, Text } from "react-native";
+import { StyleProp, Text, TextStyle } from 'react-native';
 
 export interface UpperTextProps {
     children: string,

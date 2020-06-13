@@ -8,7 +8,7 @@ import {
 } from './models';
 
 const openWeatherUrl = 'https://api.openweathermap.org/data/2.5/weather';
-const apiKey = 'f57316e024e87ad5ea0e12c5c8560426';
+const apiKey = 'ADD_API_KEY_HERE';
 
 const cloudsQuantity = new Map([
     [801, Clouds.Few],

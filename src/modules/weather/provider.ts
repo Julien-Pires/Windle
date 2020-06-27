@@ -24,6 +24,7 @@ const weatherConditions : [number, number, WeatherConditionKind][] = [
     [511, 511, WeatherConditionKind.FreezingRain],
     [520, 531, WeatherConditionKind.ShowerRain],
     [600, 622, WeatherConditionKind.Snow],
+    [781, 781, WeatherConditionKind.Tornado],
     [800, 800, WeatherConditionKind.Clear],
     [801, 804, WeatherConditionKind.Cloudy]
 ]
@@ -92,11 +93,11 @@ const getDailyForecast = (data: any, hourly: any[], timezone: Zone): DayForecast
         },
         sunrise: {
             kind: WeatherDataKind.Sunrise,
-            time: DateTime.fromSeconds(data.sunrise)
+            time: DateTime.fromSeconds(data.sunrise).setZone(timezone)
         },
         sunset: {
             kind: WeatherDataKind.Sunset,
-            time: DateTime.fromSeconds(data.sunset)
+            time: DateTime.fromSeconds(data.sunset).setZone(timezone)
         }
     };
 }

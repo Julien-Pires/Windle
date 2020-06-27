@@ -2,11 +2,8 @@ import React from 'react';
 import { SvgProps } from 'react-native-svg';
 
 import { Period } from '../../../modules/time';
-import { Clouds, Forecast, WeatherConditionKind, WeatherCondition } from '../../../modules/weather';
-import {
-    BrokenClouds, FewClouds, FreezingRain, HeavyRain, NightFull, NightHalf, OvercastClouds, Rain,
-    ShowerRain, Snow, Storm, Sun
-} from '../../../styles/icons/conditions';
+import { Clouds, WeatherCondition, WeatherConditionKind } from '../../../modules/weather';
+import { dayConditions, nightConditions } from '../../../styles/icons/conditions';
 
 export interface WeatherConditionIconProps extends SvgProps {
     clouds: Clouds,
@@ -20,48 +17,52 @@ export const WeatherConditionIcon = (props: WeatherConditionIconProps) => {
         condition,
         period
     } = props;
+    const icons = period === Period.Day ? dayConditions : nightConditions;
 
     switch(condition.kind) {
         case WeatherConditionKind.Clear:
-            if(period === Period.Day) {
-                return <Sun {... props} />;
-            } else {
-                return <NightHalf {... props} />;
-            }
+            return <icons.Clear {... props} />;
 
         case WeatherConditionKind.Cloudy:
-            if(period === Period.Day) {
-                switch(clouds) {
-                    case Clouds.Few:
-                        return <FewClouds {... props} />;
+            switch(clouds) {
+                case Clouds.Few:
+                    return <icons.FewClouds {... props} />;
 
-                    case Clouds.Broken:
-                    case Clouds.Scattered:
-                        return <BrokenClouds {... props} />;
+                case Clouds.Broken:
+                case Clouds.Scattered:
+                    return <icons.BrokenClouds {... props} />;
 
-                    case Clouds.Overcast:
-                        return <OvercastClouds {... props} />;
-                }
-            } else {
-                return <NightFull {... props} />;
+                case Clouds.Overcast:
+                    return <icons.OvercastClouds {... props} />;
             }
 
         case WeatherConditionKind.LightRain:
-            return <Rain {... props} />;
+            return <icons.Rain {... props} />;
 
         case WeatherConditionKind.HeavyRain:
-            return <HeavyRain {... props} />;
+            return <icons.HeavyRain {... props} />;
 
         case WeatherConditionKind.FreezingRain:
-            return <FreezingRain {... props} />;
+            return <icons.FreezingRain {... props} />;
 
         case WeatherConditionKind.ShowerRain:
-            return <ShowerRain {... props} />;
+            return <icons.ShowerRain {... props} />;
 
         case WeatherConditionKind.Snow:
-            return <Snow {... props} />;
+            switch(clouds) {
+                case Clouds.Few:
+                case Clouds.Broken:
+                    return <icons.LightSnow {... props} />;
+
+                case Clouds.Scattered:
+                case Clouds.Overcast:
+                    return <icons.Snow {... props} />;
+            }
 
         case WeatherConditionKind.Storm:
-            return <Storm {... props} />;
+            return <icons.Storm {...props} />;
+
+        case WeatherConditionKind.Tornado:
+            return <icons.Tornado {...props} />;
     }
 }

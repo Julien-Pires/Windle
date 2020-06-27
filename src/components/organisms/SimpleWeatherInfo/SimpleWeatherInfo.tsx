@@ -23,7 +23,7 @@ export const SimpleWeatherInfo = observer(({
 
     return (
         <View style={style}>
-            <WeatherCondition weather={weather.current} />
+            <WeatherCondition weather={weather.current} day={weather.today} />
             <Divider style={styles.divider} />
             <WeatherDataGrid values={[
                 weather.today.minTemperature,

@@ -22,7 +22,8 @@ export const DetailedWeatherInfo = ({
         weather
             .today
             .forecast
-            .concat(weather.week.flatMap(c => c.forecast))
+            .map(c => ({...c, day: weather.today}))
+            .concat(weather.week.flatMap(c => c.forecast.map(d => ({...d, day: c}))))
             .slice(0, 7)
             .map(c => ({...c, temperature: c.currentTemperature}))
 

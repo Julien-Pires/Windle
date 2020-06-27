@@ -7,8 +7,8 @@ import { Circle, G, Text } from 'react-native-svg';
 import { LineChart } from 'react-native-svg-charts';
 import { pure } from 'recompose';
 
-import { Period } from '../../../modules/time';
-import { Clouds, Temperature, WeatherCondition, WeatherDataKind, TemperatureKind } from '../../../modules/weather';
+import { getPeriod } from '../../../modules/time';
+import { Clouds, Temperature, WeatherCondition, TemperatureKind, DayForecast } from '../../../modules/weather';
 import { useStores } from '../../../stores';
 import { WeatherConditionIcon } from '../../atoms';
 import { SymbolDisplay, TemperatureHelper } from '../../helpers';
@@ -17,6 +17,7 @@ export interface ForecastChartItem {
     condition: WeatherCondition,
     clouds: Clouds,
     date: DateTime,
+    day: DayForecast,
     temperature: Temperature<TemperatureKind>
 }
 
@@ -90,7 +91,7 @@ const ConditionIcons = ({ forecasts, x, y, height, data }: any) => {
             <WeatherConditionIcon
                 condition={ forecasts[index].condition }
                 clouds={ forecasts[index].clouds }
-                period={ Period.Day }
+                period={ getPeriod(forecasts[index].date, forecasts[index].day.sunrise.time, forecasts[index].day.sunset.time) }
                 height={ 24 }
                 width={ 24 } />
         </G>

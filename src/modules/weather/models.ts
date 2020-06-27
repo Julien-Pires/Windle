@@ -40,7 +40,8 @@ export enum WeatherConditionKind {
     LightRain,
     ShowerRain,
     Snow,
-    Storm
+    Storm,
+    Tornado
 }
 
 export interface Sun<T extends WeatherDataKind.Sunrise | WeatherDataKind.Sunset> {

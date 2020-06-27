@@ -3,15 +3,15 @@ import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
-import { WeatherInfo } from '../../../modules/weather';
+import { Weather } from '../../../modules/weather';
 import { useStores } from '../../../stores';
 import { Theme } from '../../../styles/theme';
 import { Divider } from '../../atoms';
 import { WeatherCondition, WeatherDataGrid } from '../../molecules';
 
 export interface SimpleWeatherInfoProps {
-    weather: WeatherInfo,
-    style: StyleProp<ViewStyle>
+    weather: Weather,
+    style?: StyleProp<ViewStyle>
 }
 
 export const SimpleWeatherInfo = observer(({
@@ -23,12 +23,12 @@ export const SimpleWeatherInfo = observer(({
 
     return (
         <View style={style}>
-            <WeatherCondition weather={weather} />
+            <WeatherCondition weather={weather.current} />
             <Divider style={styles.divider} />
             <WeatherDataGrid values={[
-                weather.temperature.min,
-                weather.sky.wind,
-                weather.temperature.max
+                weather.today.minTemperature,
+                weather.today.maxTemperature,
+                weather.current.wind.speed
             ]} />
         </View>
     );
@@ -39,8 +39,8 @@ const stylesheet = _.memoize((theme: Theme) => {
         divider: {
             height: 1,
             width: 40,
-            marginTop: 34,
-            marginBottom: 34,
+            marginTop: 46,
+            marginBottom: 46,
             alignSelf: 'center',
             backgroundColor: theme.colors.onSurface
         }

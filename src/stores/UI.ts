@@ -23,8 +23,8 @@ export class UIStore {
             return lightTheme;
         }
 
-        const sunset = weather.sky.sunset;
-        const sunrise = weather.sky.sunrise;
+        const sunset = weather.today.sunset;
+        const sunrise = weather.today.sunrise;
         
         return city.date > sunrise.time && city.date < sunset.time ? lightTheme : darkTheme;
     }

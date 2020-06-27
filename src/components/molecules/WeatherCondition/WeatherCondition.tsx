@@ -4,13 +4,14 @@ import React from 'react';
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
 import { Period } from '../../../modules/time';
-import { WeatherInfo } from '../../../modules/weather';
+import { HourForecast } from '../../../modules/weather';
 import { useStores } from '../../../stores';
 import { Theme } from '../../../styles/theme';
-import { SymbolDisplay, TemperatureText, UpperText, WeatherConditionIcon } from '../../atoms';
+import { UpperText, WeatherConditionIcon } from '../../atoms';
+import { SymbolDisplay, TemperatureHelper } from '../../helpers';
 
 export interface WeatherConditionProps {
-    weather: WeatherInfo,
+    weather: HourForecast,
     style?: StyleProp<ViewStyle>
 }
 
@@ -24,15 +25,14 @@ export const WeatherCondition = observer(({
     return (
         <View style={StyleSheet.flatten([styles.container, style])}>
             <WeatherConditionIcon
-                condition={weather.condition.kind}
-                sky={weather.sky}
+                condition={weather.condition}
+                clouds={weather.clouds}
                 period={Period.Day}
-                height={190}
-                width={190} />
-            <TemperatureText
-                style={styles.temperature}
-                temperature={weather.temperature.current}
-                display={SymbolDisplay.Full} />
+                height='190'
+                width='190' />
+            <UpperText style={styles.temperature}>
+                { TemperatureHelper.format(weather.currentTemperature, UIStore.temperature, SymbolDisplay.Full) }
+            </UpperText>
             <UpperText style={styles.condition}>{weather.condition.description}</UpperText>
         </View>
     );

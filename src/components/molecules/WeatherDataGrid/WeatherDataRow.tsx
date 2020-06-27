@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
 import { WeatherData } from '../../../modules/weather';
 import { useStores } from '../../../stores';
@@ -10,16 +10,18 @@ import { Divider } from '../../atoms';
 import { WeatherDataItem } from './WeatherDataItem';
 
 export interface WeatherDataGridRowProps {
-    values: WeatherData[]
+    values: WeatherData[],
+    style?: StyleProp<ViewStyle>
 }
 
 export const WeatherDataGridRow = observer(({ 
-    values
+    values,
+    style
 }: WeatherDataGridRowProps) => {
     const { UIStore } = useStores();
     const styles = stylesheet(UIStore.theme);
     const items = values.flatMap(c => [ 
-        (<WeatherDataItem data={c} />),
+        (<WeatherDataItem style={styles.item} data={c} />),
         (<Divider style={styles.divider} />)
     ]);
     
@@ -28,7 +30,7 @@ export const WeatherDataGridRow = observer(({
     }
 
     return (
-        <View style={styles.row}>
+        <View style={StyleSheet.compose(style, styles.row)}>
             {items}
         </View>
     );
@@ -39,6 +41,9 @@ const stylesheet = _.memoize((theme: Theme) => {
         row: {
             flexDirection: 'row',
             justifyContent: 'space-evenly'
+        },
+        item: {
+            flex: 1,
         },
         divider: {
             alignSelf: 'center',

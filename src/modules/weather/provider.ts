@@ -1,14 +1,14 @@
-import { DateTime, FixedOffsetZone } from 'luxon';
+import { DateTime, FixedOffsetZone, Zone } from 'luxon';
 
 import * as network from '../../utils/network';
 import { Result, ResultKind } from '../../utils/types';
 import {
-    CityInfo, Clouds, WeatherCondition, WeatherConditionKind, WeatherDataKind, WeatherError,
-    WeatherErrorKind, WeatherInfo
+    CityInfo, Clouds, Weather, WeatherCondition, WeatherConditionKind, WeatherDataKind,
+    WeatherError, WeatherErrorKind, Forecast, HourForecast, DayForecast
 } from './models';
 
-const openWeatherUrl = 'https://api.openweathermap.org/data/2.5/weather';
-const apiKey = 'ADD_API_KEY_HERE';
+const openWeatherUrl = 'https://api.openweathermap.org/data/2.5/onecall';
+const apiKey = '3d03324ab344b03be5e40b9fb8f6e463';
 
 const cloudsQuantity = new Map([
     [801, Clouds.Few],
@@ -30,54 +30,30 @@ const weatherConditions : [number, number, WeatherConditionKind][] = [
 
 export interface WeatherResult {
     city: CityInfo,
-    weather: WeatherInfo
+    weather: Weather
 }
 
-export const getCurrentWeather = async (city: string): Promise<Result<WeatherResult, WeatherError>> => {
-    const response = await fetch({ q: city });
+export const getWeather = async (city: string): Promise<Result<WeatherResult, WeatherError>> => {
+    const response = await fetch({ lat: '48.85', lon: '2.35' });
 
     switch(response.kind) {
         case ResultKind.Success:
             const data = response.data;
+            const timezone = FixedOffsetZone.instance(data.timezone_offset / 60);
+            const daily = data.daily.map((c: any) => getDailyForecast(c, data.hourly, timezone));
+            const today = daily.shift() as DayForecast;
             
             return {
                 kind: ResultKind.Success,
                 data: {
                     city: { 
-                        name: data.name,
-                        timezone: FixedOffsetZone.instance(data.timezone / 60)
+                        name: city,
+                        timezone: timezone
                     },
                     weather : {
-                        temperature: {
-                            current: { 
-                                kind: WeatherDataKind.CurrentTemperature,
-                                value: data.main.temp
-                            },
-                            min: {
-                                kind: WeatherDataKind.MinTemperature,
-                                value: data.main.temp_min
-                            },
-                            max: {
-                                kind: WeatherDataKind.MaxTemperature,
-                                value: data.main.temp_max
-                            }
-                        },
-                        sky: {
-                            clouds: getClouds(data.weather),
-                            sunrise: {
-                                kind: WeatherDataKind.Sunrise,
-                                time: DateTime.fromSeconds(data.sys.sunrise)
-                            },
-                            sunset: {
-                                kind: WeatherDataKind.Sunset,
-                                time: DateTime.fromSeconds(data.sys.sunset)
-                            },
-                            wind: {
-                                kind: WeatherDataKind.Wind,
-                                speed: data.wind.speed
-                            }
-                        },
-                        condition: getWeatherCondition(data.weather)
+                        current: getHourlyForecast(data.current, timezone),
+                        week: daily,
+                        today: today
                     }
                 }
             }
@@ -93,10 +69,83 @@ export const getCurrentWeather = async (city: string): Promise<Result<WeatherRes
     }
 }
 
+const getDailyForecast = (data: any, hourly: any[], timezone: Zone): DayForecast => {
+    const date = DateTime.fromSeconds(data.dt).setZone(timezone);
+    const forecast = getForecast(data, timezone);
+    const hourlyForecast = hourly
+        .filter(data => {
+            const weatherDate = DateTime.fromSeconds(data.dt).setZone(timezone);
+            return weatherDate.day === date.day;
+        })
+        .map(data => getHourlyForecast(data, timezone));
+
+    return {
+        ...forecast,
+        forecast: hourlyForecast,
+        maxTemperature: {
+            kind: WeatherDataKind.MaxTemperature,
+            value: Math.ceil(data.temp.max)
+        },
+        minTemperature: {
+            kind: WeatherDataKind.MinTemperature,
+            value: Math.floor(data.temp.min)
+        },
+        sunrise: {
+            kind: WeatherDataKind.Sunrise,
+            time: DateTime.fromSeconds(data.sunrise)
+        },
+        sunset: {
+            kind: WeatherDataKind.Sunset,
+            time: DateTime.fromSeconds(data.sunset)
+        }
+    };
+}
+
+const getHourlyForecast = (data: any, timezone: Zone): HourForecast => {
+    const forecast = getForecast(data, timezone);
+    return {
+        ...forecast,
+        humidity: {
+            kind: WeatherDataKind.Humidity,
+            value: data.humidity
+        },
+        pressure: {
+            kind: WeatherDataKind.Pressure,
+            value: data.pressure
+        },
+        currentTemperature: {
+            kind: WeatherDataKind.CurrentTemperature,
+            value: data.temp
+        },
+        feelsLikeTemperature: {
+            kind: WeatherDataKind.FeelsLikeTemperature,
+            value: data.feels_like
+        }
+    };
+}
+
+const getForecast = (data: any, timezone: Zone): Forecast => {
+    return {
+        condition: getWeatherCondition(data.weather),
+        date: DateTime.fromSeconds(data.dt).setZone(timezone),
+        clouds: getClouds(data.weather),
+        wind: {
+            direction: {
+                kind: WeatherDataKind.WindDirection,
+                value: data.wind_deg
+            },
+            speed: {
+                kind: WeatherDataKind.WindSpeed,
+                value: data.wind_speed
+            }
+        }
+    }
+}
+
 const getClouds = (weather: any[]) : Clouds => {
     const clouds = weather.map(c => cloudsQuantity.get(c.id)).filter((c) : c is Clouds => c !== undefined);
 
-    return clouds ? clouds[0] : Clouds.None; 
+    return clouds.shift() ?? Clouds.None; 
 }
 
 const getWeatherCondition = (weathers: any[]) : WeatherCondition => {

@@ -5,7 +5,8 @@ import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
 import { City, useStores } from '../../../stores';
 import { Theme } from '../../../styles/theme';
-import { DateTimeDisplay, DateTimeText, UpperText } from '../../atoms';
+import { UpperText } from '../../atoms';
+import { DateTimeDisplay, TimeHelper } from '../../helpers/time';
 
 export interface CityTitleProps {
     city: City,
@@ -20,12 +21,9 @@ export const CityTitle = observer(({
     const styles = stylesheet(UIStore.theme);
 
     return (
-        <View style={StyleSheet.flatten([styles.container, style])}>
-            <UpperText style={styles.city}>{city.name}</UpperText>
-            <DateTimeText 
-                style={styles.date} 
-                date={city.date} 
-                display={DateTimeDisplay.DateTime} />
+        <View style={ StyleSheet.flatten([styles.container, style]) }>
+            <UpperText style={ styles.city }>{ city.name }</UpperText>
+            <UpperText style={ styles.date }>{ TimeHelper.format(city.date, DateTimeDisplay.DateTime) }</UpperText>
         </View>
     );
 });

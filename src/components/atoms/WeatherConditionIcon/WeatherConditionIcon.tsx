@@ -2,66 +2,66 @@ import React from 'react';
 import { SvgProps } from 'react-native-svg';
 
 import { Period } from '../../../modules/time';
-import { Clouds, Sky, WeatherConditionKind } from '../../../modules/weather';
+import { Clouds, Forecast, WeatherConditionKind, WeatherCondition } from '../../../modules/weather';
 import {
     BrokenClouds, FewClouds, FreezingRain, HeavyRain, NightFull, NightHalf, OvercastClouds, Rain,
     ShowerRain, Snow, Storm, Sun
 } from '../../../styles/icons/conditions';
 
 export interface WeatherConditionIconProps extends SvgProps {
-    condition: WeatherConditionKind,
-    sky: Sky,
+    clouds: Clouds,
+    condition: WeatherCondition,
     period: Period
 }
 
-export const WeatherConditionIcon = ({
-    condition,
-    sky,
-    period,
-    height,
-    width
-}: WeatherConditionIconProps) => {
-    switch(condition) {
+export const WeatherConditionIcon = (props: WeatherConditionIconProps) => {
+    const {
+        clouds,
+        condition,
+        period
+    } = props;
+
+    switch(condition.kind) {
         case WeatherConditionKind.Clear:
             if(period === Period.Day) {
-                return <Sun height={height} width={width} />;
+                return <Sun {... props} />;
             } else {
-                return <NightHalf height={height} width={width} />;
+                return <NightHalf {... props} />;
             }
 
         case WeatherConditionKind.Cloudy:
             if(period === Period.Day) {
-                switch(sky.clouds) {
+                switch(clouds) {
                     case Clouds.Few:
-                        return <FewClouds height={height} width={width} />;
+                        return <FewClouds {... props} />;
 
                     case Clouds.Broken:
                     case Clouds.Scattered:
-                        return <BrokenClouds height={height} width={width} />;
+                        return <BrokenClouds {... props} />;
 
                     case Clouds.Overcast:
-                        return <OvercastClouds height={height} width={width} />;
+                        return <OvercastClouds {... props} />;
                 }
             } else {
-                return <NightFull height={height} width={width} />;
+                return <NightFull {... props} />;
             }
 
         case WeatherConditionKind.LightRain:
-            return <Rain height={height} width={width} />;
+            return <Rain {... props} />;
 
         case WeatherConditionKind.HeavyRain:
-            return <HeavyRain height={height} width={width} />;
+            return <HeavyRain {... props} />;
 
         case WeatherConditionKind.FreezingRain:
-            return <FreezingRain height={height} width={width} />;
+            return <FreezingRain {... props} />;
 
         case WeatherConditionKind.ShowerRain:
-            return <ShowerRain height={height} width={width} />;
+            return <ShowerRain {... props} />;
 
         case WeatherConditionKind.Snow:
-            return <Snow height={height} width={width} />;
+            return <Snow {... props} />;
 
         case WeatherConditionKind.Storm:
-            return <Storm height={height} width={width} />;
+            return <Storm {... props} />;
     }
 }

@@ -1,66 +1,92 @@
 import _ from 'lodash';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
-import { WeatherData, WeatherDataKind } from '../../../modules/weather';
+import { WeatherData, WeatherDataKind, WindModule } from '../../../modules/weather';
 import { useStores } from '../../../stores';
-import { Cold, Hot, Sunrise, Sunset, Wind } from '../../../styles/icons/icons';
-import { Theme } from '../../../styles/theme';
 import {
-    DateTimeDisplay, DateTimeText, SymbolDisplay, TemperatureText, UpperText, WindText
-} from '../../atoms';
+    Barometer, Cold, Hot, Humidity, Sunrise, Sunset, Temperature, Wind, WindDirection
+} from '../../../styles/icons/icons';
+import { Theme } from '../../../styles/theme';
+import { UpperText } from '../../atoms';
+import { SymbolDisplay, TemperatureHelper, WindHelper } from '../../helpers';
+import { DateTimeDisplay, TimeHelper } from '../../helpers/time';
 
 export interface WeatherDataItemProps {
-    data: WeatherData
+    data: WeatherData,
+    style?: StyleProp<ViewStyle>
 }
 
 export const WeatherDataItem = observer(({
-    data
+    data,
+    style
 }: WeatherDataItemProps) => {
     const { UIStore } = useStores();
     const styles = stylesheet(UIStore.theme);
     const icon = getIcon(data, UIStore.theme);
-    const title = getTitle(data);
-    const value = getValue(data, UIStore.theme);
 
     return (
-        <View style={styles.item}>
+        <View style={StyleSheet.compose(style, styles.item)}>
             {icon}
-            <UpperText style={styles.title}>{title}</UpperText>
-            {value}
+            <UpperText style={styles.value}>{ getValue(data) }</UpperText>
+            <UpperText style={styles.title}>{ getTitle(data) }</UpperText>
         </View>
     )
 });
 
 const getIcon = (data: WeatherData, theme: Theme) => {
-    const styles = stylesheet(theme);
+    const props = iconProperties(theme);
 
     switch(data.kind) {
+        case WeatherDataKind.FeelsLikeTemperature:
+            return <Temperature {...props} />;
+
+        case WeatherDataKind.Humidity:
+            return <Humidity {...props} />;
+
         case WeatherDataKind.MaxTemperature:
-            return <Hot style={styles.icon} fill={theme.colors.onSurface} />;
+            return <Hot {...props} />;
 
         case WeatherDataKind.MinTemperature:
-            return <Cold style={styles.icon} fill={theme.colors.onSurface} />
+            return <Cold {...props} />
+
+        case WeatherDataKind.Pressure:
+            return <Barometer {...props} />;
 
         case WeatherDataKind.Sunrise:
-            return <Sunrise style={styles.icon} fill={theme.colors.onSurface} />;
+            return <Sunrise {...props} />;
 
         case WeatherDataKind.Sunset:
-            return <Sunset style={styles.icon} fill={theme.colors.onSurface} />;
+            return <Sunset {...props} />;
 
-        case WeatherDataKind.Wind:
-            return <Wind style={styles.icon} fill={theme.colors.onSurface} />;
+        case WeatherDataKind.WindDirection:
+            return <WindDirection {...props} />;
+
+        case WeatherDataKind.WindSpeed:
+            return <Wind {...props} />;
     }
 }
 
 const getTitle = (data: WeatherData) => {
     switch(data.kind) {
+        case WeatherDataKind.CurrentTemperature:
+            return 'current';
+            
+        case WeatherDataKind.FeelsLikeTemperature:
+            return 'feels like'
+
+        case WeatherDataKind.Humidity:
+            return 'humidity';
+
         case WeatherDataKind.MaxTemperature:
             return 'max';
 
         case WeatherDataKind.MinTemperature:
             return 'min';
+
+        case WeatherDataKind.Pressure:
+            return 'pressure'
 
         case WeatherDataKind.Sunrise:
             return 'sunrise';
@@ -68,37 +94,50 @@ const getTitle = (data: WeatherData) => {
         case WeatherDataKind.Sunset:
             return 'sunset';
 
-        case WeatherDataKind.Wind:
+        case WeatherDataKind.WindDirection:
+            return 'direction';
+
+        case WeatherDataKind.WindSpeed:
             return 'wind';
     }
 }
 
-const getValue = (data: WeatherData, theme: Theme) => {
-    const styles = stylesheet(theme);
+const getValue = (data: WeatherData) : string => {
+    const { UIStore } = useStores();
 
     switch(data.kind) {
+        case WeatherDataKind.Humidity:
+            return `${data.value} %`;
+
+        case WeatherDataKind.FeelsLikeTemperature:
         case WeatherDataKind.MaxTemperature:
         case WeatherDataKind.MinTemperature:
-            return <TemperatureText style={styles.value} temperature={data} display={SymbolDisplay.Short} />
+            return TemperatureHelper.format(data, UIStore.temperature, SymbolDisplay.Short);
+
+        case WeatherDataKind.Pressure:
+            return `${data.value} hpa`;
 
         case WeatherDataKind.Sunrise:
         case WeatherDataKind.Sunset:
-            return <DateTimeText style={styles.value} date={data.time} display={DateTimeDisplay.Time} />
+            return TimeHelper.format(data.time, DateTimeDisplay.Time);
 
-        case WeatherDataKind.Wind:
-            return <WindText style={styles.value} wind={data} display={SymbolDisplay.Full} />
+        case WeatherDataKind.WindDirection:
+            return WindModule.toDirection(data);
+
+        case WeatherDataKind.WindSpeed:
+            return WindHelper.format(data, UIStore.windSpeed, SymbolDisplay.Full);
     }
+
+    return '';
 }
 
 const stylesheet = _.memoize((theme: Theme) => {
     return StyleSheet.create({
         item: {
-            alignItems: 'center',
+            alignItems: 'center'
         },
         icon: {
-            height: 32,
-            width: 32,
-            marginBottom: 18,
+            marginBottom: 14,
             color: theme.colors.onSurface
         },
         title: {
@@ -106,8 +145,20 @@ const stylesheet = _.memoize((theme: Theme) => {
             color: theme.colors.onSurface,
         },
         value: {
-            ...theme.font.normal.H6,
-            color: theme.colors.onSurface
+            ...theme.font.normal.Body1,
+            color: theme.colors.onSurface,
+            marginBottom: 4
         },
     });
+});
+
+const iconProperties = _.memoize((theme: Theme) => {
+    const styles = stylesheet(theme);
+
+    return {
+        height: 28,
+        width: 28,
+        fill: theme.colors.onSurface,
+        style: styles.icon
+    }
 });

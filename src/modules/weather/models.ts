@@ -1,12 +1,16 @@
-import { DateTime, Zone } from "luxon";
+import { DateTime, Zone } from 'luxon';
 
 export enum WeatherDataKind {
     CurrentTemperature,
+    Humidity,
+    FeelsLikeTemperature,
     MinTemperature,
     MaxTemperature,
+    Pressure,
     Sunrise,
     Sunset,
-    Wind
+    WindDirection,
+    WindSpeed
 }
 
 export enum TemperatureMetrics {
@@ -39,23 +43,34 @@ export enum WeatherConditionKind {
     Storm
 }
 
-export enum WeatherErrorKind {
-    NotFound
-}
-
-export interface Sunrise {
-    kind: WeatherDataKind.Sunrise,
+export interface Sun<T extends WeatherDataKind.Sunrise | WeatherDataKind.Sunset> {
+    kind: T,
     time: DateTime
 }
 
-export interface Sunset {
-    kind: WeatherDataKind.Sunset,
-    time: DateTime
+export interface WindSpeed {
+    kind: WeatherDataKind.WindSpeed,
+    value: number
+}
+
+export interface WindDirection {
+    kind: WeatherDataKind.WindDirection,
+    value: number
 }
 
 export interface Wind {
-    kind: WeatherDataKind.Wind,
-    speed: number
+    direction: WindDirection,
+    speed: WindSpeed
+}
+
+export interface Humidity {
+    kind: WeatherDataKind.Humidity,
+    value: number
+}
+
+export interface Pressure {
+    kind: WeatherDataKind.Pressure,
+    value: number
 }
 
 export interface WeatherCondition {
@@ -63,51 +78,64 @@ export interface WeatherCondition {
     description: string
 }
 
-export interface Temperature {
+export type TemperatureKind =
+    | WeatherDataKind.CurrentTemperature
+    | WeatherDataKind.FeelsLikeTemperature
+    | WeatherDataKind.MaxTemperature
+    | WeatherDataKind.MinTemperature
+
+export interface Temperature<TempKind extends TemperatureKind> {
+    kind: TempKind,
     value: number
 }
 
-export interface CurrentTemperature extends Temperature {
-    kind: WeatherDataKind.CurrentTemperature
-}
-
-export interface MaxTemperature extends Temperature {
-    kind: WeatherDataKind.MaxTemperature
-}
-
-export interface MinTemperature extends Temperature {
-    kind: WeatherDataKind.MinTemperature
-}
-
 export type WeatherData =
-    | MaxTemperature
-    | MinTemperature
-    | Sunrise
-    | Sunset
-    | Wind
+    | Humidity
+    | Pressure
+    | Sun<WeatherDataKind.Sunrise>
+    | Sun<WeatherDataKind.Sunset>
+    | Temperature<WeatherDataKind.CurrentTemperature>
+    | Temperature<WeatherDataKind.MinTemperature>
+    | Temperature<WeatherDataKind.MaxTemperature>
+    | Temperature<WeatherDataKind.FeelsLikeTemperature>
+    | WindDirection
+    | WindSpeed
 
 export interface CityInfo {
     name: string,
     timezone: Zone
 }
 
-export interface Sky {
+export interface Forecast {
     clouds: Clouds,
-    sunrise: Sunrise,
-    sunset: Sunset,
+    condition: WeatherCondition,
+    date: DateTime,
     wind: Wind
 }
 
-export interface DayTemperature {
-    current: CurrentTemperature,
-    min: MinTemperature,
-    max: MaxTemperature
+export interface HourForecast extends Forecast {
+    currentTemperature: Temperature<WeatherDataKind.CurrentTemperature>,
+    feelsLikeTemperature: Temperature<WeatherDataKind.FeelsLikeTemperature>,
+    humidity: Humidity,
+    pressure: Pressure
 }
 
-export interface WeatherInfo {
-    condition: WeatherCondition,
-    temperature: DayTemperature,
-    sky: Sky
+export interface DayForecast extends Forecast {
+    forecast: HourForecast[],
+    maxTemperature: Temperature<WeatherDataKind.MaxTemperature>,
+    minTemperature: Temperature<WeatherDataKind.MinTemperature>,
+    sunrise: Sun<WeatherDataKind.Sunrise>,
+    sunset: Sun<WeatherDataKind.Sunset>
+}
+
+export interface Weather {
+    current: HourForecast,
+    week: DayForecast[],
+    today: DayForecast
+}
+
+export enum WeatherErrorKind {
+    NotFound
 }
 
 export interface WeatherError {

@@ -4,7 +4,9 @@ export interface Colors {
 }
 
 export interface Font {
-    fontSize: number
+    fontSize: number,
+    lineHeight?: number,
+    height?: number
 }
 
 export interface FontSizes {

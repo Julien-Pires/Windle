@@ -1,13 +1,14 @@
 import _ from 'lodash';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
-import { SafeAreaView, StyleSheet, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import Swiper from 'react-native-swiper';
 
 import { useStores } from '../../../stores';
 import { Theme } from '../../../styles/theme';
 import { UpperText } from '../../atoms';
 import { CityTitle } from '../../molecules';
-import { SimpleWeatherInfo } from '../../organisms';
+import { SimpleWeatherInfo, DetailedWeatherInfo } from '../../organisms';
 
 export const Home = observer(() => {
     const { dataStore, UIStore } = useStores();
@@ -24,16 +25,19 @@ export const Home = observer(() => {
     }
 
     return (
-        <View style={styles.page}>
-            <SafeAreaView>
-                <CityTitle
-                    style={styles.cityInfo}
-                    city={dataStore.weather.city} />
-                <SimpleWeatherInfo 
-                    style={styles.weather} 
+        <SafeAreaView style={styles.page}>
+            <CityTitle
+                style={styles.cityInfo}
+                city={dataStore.weather.city} />
+            <Swiper showsPagination={false} loop={false}>
+                <SimpleWeatherInfo
+                    style={styles.weather}
                     weather={dataStore.weather.weather} />
-            </SafeAreaView>
-        </View>
+                <DetailedWeatherInfo
+                    style={styles.weather}
+                    weather={dataStore.weather.weather} />
+            </Swiper>
+        </SafeAreaView>
     );
 })
 
@@ -47,7 +51,7 @@ const stylesheet = _.memoize((theme: Theme) => {
             marginTop: 52
         },
         weather: {
-            marginTop: 34
+            marginTop: 48
         }
     });
 });

@@ -8,7 +8,7 @@ import { useStores } from '../../../stores';
 import { Theme } from '../../../styles/theme';
 import { UpperText } from '../../atoms';
 import { CityTitle } from '../../molecules';
-import { SimpleWeatherInfo, DetailedWeatherInfo } from '../../organisms';
+import { SimpleWeatherInfo, DetailedWeatherInfo, WeeklyWeatherInfo } from '../../organisms';
 
 export const Home = observer(() => {
     const { dataStore, UIStore } = useStores();
@@ -29,12 +29,20 @@ export const Home = observer(() => {
             <CityTitle
                 style={styles.cityInfo}
                 city={dataStore.weather.city} />
-            <Swiper showsPagination={false} loop={false}>
+            <Swiper
+                showsPagination={true}
+                dotStyle={styles.dot}
+                activeDotStyle={styles.activeDot}
+                paginationStyle={styles.pagination}
+                loop={false}>
                 <SimpleWeatherInfo
-                    style={styles.weather}
+                    style={styles.slideContainer}
                     weather={dataStore.weather.weather} />
                 <DetailedWeatherInfo
-                    style={styles.weather}
+                    style={styles.slideContainer}
+                    weather={dataStore.weather.weather} />
+                <WeeklyWeatherInfo
+                    style={styles.slideContainer}
                     weather={dataStore.weather.weather} />
             </Swiper>
         </SafeAreaView>
@@ -47,10 +55,24 @@ const stylesheet = _.memoize((theme: Theme) => {
             flex: 1,
             backgroundColor: theme.colors.surface
         },
+        pagination: {
+            bottom: 12
+        },
+        dot: {
+            backgroundColor: theme.colors.onSurface,
+            opacity: 0.4,
+            height: 6,
+            width: 6
+        },
+        activeDot: {
+            backgroundColor: theme.colors.onSurface,
+            height: 6,
+            width: 6
+        },
         cityInfo: {
             marginTop: 52
         },
-        weather: {
+        slideContainer: {
             marginTop: 48
         }
     });

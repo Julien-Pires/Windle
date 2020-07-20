@@ -3,15 +3,11 @@ import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
-import { WeatherData, WeatherDataKind, WindModule } from '../../../modules/weather';
+import { WeatherData, WeatherDataKind } from '../../../modules/weather';
 import { useStores } from '../../../stores';
-import {
-    Barometer, Cold, Hot, Humidity, Sunrise, Sunset, Temperature, Wind, WindDirection
-} from '../../../styles/icons/icons';
 import { Theme } from '../../../styles/theme';
-import { UpperText } from '../../atoms';
-import { SymbolDisplay, TemperatureHelper, WindHelper } from '../../helpers';
-import { DateTimeDisplay, TimeHelper } from '../../helpers/time';
+import { Icon, UpperText } from '../../atoms';
+import { getWeatherDataIcon, getWeatherDataValue } from '../../helpers';
 
 export interface WeatherDataItemProps {
     data: WeatherData,
@@ -24,49 +20,21 @@ export const WeatherDataItem = observer(({
 }: WeatherDataItemProps) => {
     const { UIStore } = useStores();
     const styles = stylesheet(UIStore.theme);
-    const icon = getIcon(data, UIStore.theme);
+    const icon = getWeatherDataIcon(data);
+    const value = getWeatherDataValue({
+        data: data,
+        temperature: UIStore.temperature,
+        wind: UIStore.windSpeed
+    });
 
     return (
         <View style={StyleSheet.compose(style, styles.item)}>
-            {icon}
-            <UpperText style={styles.value}>{ getValue(data) }</UpperText>
+            <Icon style={styles.icon} icon={icon} height={28} width={28} fill={UIStore.theme.colors.onSurface} />
+            <UpperText style={styles.value}>{ value }</UpperText>
             <UpperText style={styles.title}>{ getTitle(data) }</UpperText>
         </View>
     )
 });
-
-const getIcon = (data: WeatherData, theme: Theme) => {
-    const props = iconProperties(theme);
-
-    switch(data.kind) {
-        case WeatherDataKind.FeelsLikeTemperature:
-            return <Temperature {...props} />;
-
-        case WeatherDataKind.Humidity:
-            return <Humidity {...props} />;
-
-        case WeatherDataKind.MaxTemperature:
-            return <Hot {...props} />;
-
-        case WeatherDataKind.MinTemperature:
-            return <Cold {...props} />
-
-        case WeatherDataKind.Pressure:
-            return <Barometer {...props} />;
-
-        case WeatherDataKind.Sunrise:
-            return <Sunrise {...props} />;
-
-        case WeatherDataKind.Sunset:
-            return <Sunset {...props} />;
-
-        case WeatherDataKind.WindDirection:
-            return <WindDirection {...props} />;
-
-        case WeatherDataKind.WindSpeed:
-            return <Wind {...props} />;
-    }
-}
 
 const getTitle = (data: WeatherData) => {
     switch(data.kind) {
@@ -102,35 +70,6 @@ const getTitle = (data: WeatherData) => {
     }
 }
 
-const getValue = (data: WeatherData) : string => {
-    const { UIStore } = useStores();
-
-    switch(data.kind) {
-        case WeatherDataKind.Humidity:
-            return `${data.value} %`;
-
-        case WeatherDataKind.FeelsLikeTemperature:
-        case WeatherDataKind.MaxTemperature:
-        case WeatherDataKind.MinTemperature:
-            return TemperatureHelper.format(data, UIStore.temperature, SymbolDisplay.Short);
-
-        case WeatherDataKind.Pressure:
-            return `${data.value} hpa`;
-
-        case WeatherDataKind.Sunrise:
-        case WeatherDataKind.Sunset:
-            return TimeHelper.format(data.time, DateTimeDisplay.Time);
-
-        case WeatherDataKind.WindDirection:
-            return WindModule.toDirection(data);
-
-        case WeatherDataKind.WindSpeed:
-            return WindHelper.format(data, UIStore.windSpeed, SymbolDisplay.Full);
-    }
-
-    return '';
-}
-
 const stylesheet = _.memoize((theme: Theme) => {
     return StyleSheet.create({
         item: {
@@ -150,15 +89,4 @@ const stylesheet = _.memoize((theme: Theme) => {
             marginBottom: 4
         },
     });
-});
-
-const iconProperties = _.memoize((theme: Theme) => {
-    const styles = stylesheet(theme);
-
-    return {
-        height: 28,
-        width: 28,
-        fill: theme.colors.onSurface,
-        style: styles.icon
-    }
 });

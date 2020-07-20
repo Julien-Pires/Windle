@@ -1,5 +1,3 @@
-import { SvgProps } from 'react-native-svg';
-
 import dayBrokenClouds from '../../../assets/icons/weather/conditions/day/broken-clouds.svg';
 import dayClear from '../../../assets/icons/weather/conditions/day/clear.svg';
 import dayFewClouds from '../../../assets/icons/weather/conditions/day/few-clouds.svg';
@@ -24,48 +22,56 @@ import nightShowerRain from '../../../assets/icons/weather/conditions/night/show
 import nightSnow from '../../../assets/icons/weather/conditions/night/snow.svg';
 import nightStorm from '../../../assets/icons/weather/conditions/night/storm.svg';
 import nightTornado from '../../../assets/icons/weather/conditions/night/tornado.svg';
+import barometer from '../../../assets/icons/weather/lineal/barometer.svg';
+import cold from '../../../assets/icons/weather/lineal/cold-temperature.svg';
+import hot from '../../../assets/icons/weather/lineal/hot-temperature.svg';
+import humidity from '../../../assets/icons/weather/lineal/humidity.svg';
+import sunrise from '../../../assets/icons/weather/lineal/sunrise.svg';
+import sunset from '../../../assets/icons/weather/lineal/sunset.svg';
+import temperature from '../../../assets/icons/weather/lineal/temperature.svg';
+import windDirection from '../../../assets/icons/weather/lineal/wind-direction.svg';
+import wind from '../../../assets/icons/weather/lineal/wind.svg';
 
-export interface ConditionIcons {
-    BrokenClouds: React.FC<SvgProps>,
-    Clear: React.FC<SvgProps>,
-    FewClouds: React.FC<SvgProps>,
-    FreezingRain: React.FC<SvgProps>,
-    HeavyRain: React.FC<SvgProps>,
-    LightSnow: React.FC<SvgProps>,
-    OvercastClouds: React.FC<SvgProps>,
-    Rain: React.FC<SvgProps>,
-    ShowerRain: React.FC<SvgProps>,
-    Snow: React.FC<SvgProps>,
-    Storm: React.FC<SvgProps>,
-    Tornado: React.FC<SvgProps>
-}
-
-export const dayConditions : ConditionIcons = {
-    BrokenClouds: dayBrokenClouds,
-    Clear: dayClear,
-    FewClouds: dayFewClouds,
-    FreezingRain: dayFreezingRain,
-    HeavyRain: dayHeavyRain,
-    LightSnow: dayLightSnow,
-    OvercastClouds: dayOvercastClouds,
-    Rain: dayRain,
-    ShowerRain: dayShowerRain,
-    Snow: daySnow,
-    Storm: dayStorm,
-    Tornado: dayTornado
-}
-
-export const nightConditions : ConditionIcons= {
-    BrokenClouds: nightBrokenClouds,
-    Clear: nightClear,
-    FewClouds: nightFewClouds,
-    FreezingRain: nightFreezingRain,
-    HeavyRain: nightHeavyRain,
-    LightSnow: nightLightSnow,
-    OvercastClouds: nightOvercastClouds,
-    Rain: nightRain,
-    ShowerRain: nightShowerRain,
-    Snow: nightSnow,
-    Storm: nightStorm,
-    Tornado: nightTornado
-}
+export default {
+    conditions: {
+        day: {
+            BrokenClouds: dayBrokenClouds,
+            Clear: dayClear,
+            FewClouds: dayFewClouds,
+            FreezingRain: dayFreezingRain,
+            HeavyRain: dayHeavyRain,
+            LightSnow: dayLightSnow,
+            OvercastClouds: dayOvercastClouds,
+            Rain: dayRain,
+            ShowerRain: dayShowerRain,
+            Snow: daySnow,
+            Storm: dayStorm,
+            Tornado: dayTornado
+        },
+        night: {
+            BrokenClouds: nightBrokenClouds,
+            Clear: nightClear,
+            FewClouds: nightFewClouds,
+            FreezingRain: nightFreezingRain,
+            HeavyRain: nightHeavyRain,
+            LightSnow: nightLightSnow,
+            OvercastClouds: nightOvercastClouds,
+            Rain: nightRain,
+            ShowerRain: nightShowerRain,
+            Snow: nightSnow,
+            Storm: nightStorm,
+            Tornado: nightTornado
+        }
+    },
+    misc: {
+        Barometer: barometer,
+        Cold: cold,
+        Hot: hot,
+        Humidity: humidity,
+        Sunrise: sunrise,
+        Sunset: sunset,
+        Temperature: temperature,
+        Wind: wind,
+        WindDirection: windDirection
+    }
+};

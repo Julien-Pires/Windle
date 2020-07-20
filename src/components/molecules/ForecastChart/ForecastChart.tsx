@@ -8,10 +8,14 @@ import { LineChart } from 'react-native-svg-charts';
 import { pure } from 'recompose';
 
 import { getPeriod } from '../../../modules/time';
-import { Clouds, Temperature, WeatherCondition, TemperatureKind, DayForecast } from '../../../modules/weather';
+import {
+    Clouds, DayForecast, Temperature, TemperatureKind, WeatherCondition
+} from '../../../modules/weather';
 import { useStores } from '../../../stores';
-import { WeatherConditionIcon } from '../../atoms';
-import { SymbolDisplay, TemperatureHelper } from '../../helpers';
+import { Icon } from '../../atoms';
+import {
+    convertTemperature, formatTemperature, getWeatherConditionIcon, SymbolDisplay
+} from '../../helpers';
 
 export interface ForecastChartItem {
     condition: WeatherCondition,
@@ -31,7 +35,7 @@ export const ForecastChart = pure(({
     style
 }: ForecastChartProps) => {
     const { UIStore } = useStores();
-    const temperatures = forecasts.map(c => TemperatureHelper.convert(c.temperature, UIStore.temperature));
+    const temperatures = forecasts.map(c => convertTemperature(c.temperature, UIStore.temperature));
     const minTemp = Math.min(...temperatures) - 4;
     const maxTemp = Math.max(...temperatures) + 4;
 
@@ -64,7 +68,7 @@ const TemperatureLabels = ({ forecasts, theme, metrics, x, y, data }: any) => {
                 fontSize={ theme.font.bold.Body2.fontSize }
                 fill={ theme.colors.onSurface }
                 textAnchor={ 'middle' }>
-                { TemperatureHelper.format(forecasts[index].temperature, metrics, SymbolDisplay.Short) }
+                { formatTemperature(forecasts[index].temperature, metrics, SymbolDisplay.Short) }
             </Text>
             <Text
                 y={ -18 }
@@ -84,18 +88,21 @@ const TemperatureLabels = ({ forecasts, theme, metrics, x, y, data }: any) => {
 };
 
 const ConditionIcons = ({ forecasts, x, y, height, data }: any) => {
-    return data.map((_: any, index: number) => (
-        <G
-            y={ height - 78 }
-            x={ x(index) - 12 }>
-            <WeatherConditionIcon
-                condition={ forecasts[index].condition }
-                clouds={ forecasts[index].clouds }
-                period={ getPeriod(forecasts[index].date, forecasts[index].day.sunrise.time, forecasts[index].day.sunset.time) }
-                height={ 24 }
-                width={ 24 } />
-        </G>
-    ));
+    return data.map((_: any, index: number) => {
+        const period = getPeriod(forecasts[index].date, forecasts[index].day.sunrise.time, forecasts[index].day.sunset.time);
+        const icon = getWeatherConditionIcon(forecasts[index].condition, forecasts[index].clouds, period);
+
+        return (
+            <G
+                y={ height - 78 }
+                x={ x(index) - 12 }>
+                <Icon
+                    icon={icon}
+                    height={ 24 }
+                    width={ 24 } />
+            </G>
+        );
+    });
 }
 
 const Hours = ({ forecasts, theme, x, y, height, data }: any) => {

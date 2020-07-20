@@ -7,8 +7,8 @@ import { getPeriod } from '../../../modules/time';
 import { DayForecast, HourForecast } from '../../../modules/weather';
 import { useStores } from '../../../stores';
 import { Theme } from '../../../styles/theme';
-import { UpperText, WeatherConditionIcon } from '../../atoms';
-import { SymbolDisplay, TemperatureHelper } from '../../helpers';
+import { Icon, UpperText } from '../../atoms';
+import { formatTemperature, getWeatherConditionIcon, SymbolDisplay } from '../../helpers';
 
 export interface WeatherConditionProps {
     day: DayForecast,
@@ -23,17 +23,16 @@ export const WeatherCondition = observer(({
 }: WeatherConditionProps) => {
     const { UIStore } = useStores();
     const styles = stylesheet(UIStore.theme);
+    const period = getPeriod(weather.date, day.sunrise.time, day.sunset.time);
 
     return (
         <View style={StyleSheet.flatten([styles.container, style])}>
-            <WeatherConditionIcon
-                condition={weather.condition}
-                clouds={weather.clouds}
-                period={ getPeriod(weather.date, day.sunrise.time, day.sunset.time) }
+            <Icon
+                icon={ getWeatherConditionIcon(weather.condition, weather.clouds, period) }
                 height='190'
                 width='190' />
             <UpperText style={styles.temperature}>
-                { TemperatureHelper.format(weather.currentTemperature, UIStore.temperature, SymbolDisplay.Full) }
+                { formatTemperature(weather.currentTemperature, UIStore.temperature, SymbolDisplay.Full) }
             </UpperText>
             <UpperText style={styles.condition}>{weather.condition.description}</UpperText>
         </View>

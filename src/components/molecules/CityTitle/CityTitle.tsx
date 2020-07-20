@@ -6,7 +6,7 @@ import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import { City, useStores } from '../../../stores';
 import { Theme } from '../../../styles/theme';
 import { UpperText } from '../../atoms';
-import { DateTimeDisplay, TimeHelper } from '../../helpers/time';
+import { DateTimeDisplay, formatDate } from '../../helpers/time/dateTimeHelper';
 
 export interface CityTitleProps {
     city: City,
@@ -23,7 +23,7 @@ export const CityTitle = observer(({
     return (
         <View style={ StyleSheet.flatten([styles.container, style]) }>
             <UpperText style={ styles.city }>{ city.name }</UpperText>
-            <UpperText style={ styles.date }>{ TimeHelper.format(city.date, DateTimeDisplay.DateTime) }</UpperText>
+            <UpperText style={ styles.date }>{ formatDate(city.date, DateTimeDisplay.DateTime) }</UpperText>
         </View>
     );
 });

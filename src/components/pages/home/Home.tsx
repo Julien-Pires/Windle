@@ -1,34 +1,43 @@
 import _ from 'lodash';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet } from 'react-native';
 import Swiper from 'react-native-swiper';
 
 import { useStores } from '../../../stores';
+import Icons from '../../../styles/icons';
 import { Theme } from '../../../styles/theme';
-import { UpperText } from '../../atoms';
-import { CityTitle } from '../../molecules';
-import { SimpleWeatherInfo, DetailedWeatherInfo, WeeklyWeatherInfo } from '../../organisms';
+import { Page } from '../../layouts';
+import { CityTitle, NavigationBar } from '../../molecules';
+import { DetailedWeatherInfo, SimpleWeatherInfo, WeeklyWeatherInfo } from '../../organisms';
 
-export const Home = observer(() => {
+export const Home = observer(({ navigation }) => {
     const { dataStore, UIStore } = useStores();
     const styles = stylesheet(UIStore.theme);
     
+    const navigationBar = (
+        <NavigationBar
+            left={{
+                icon: Icons.misc.Gear,
+                onPress: _ => {navigation.navigate('settings')}
+            }}
+            right={{
+                icon: Icons.misc.AddPin,
+                onPress: _ => {navigation.navigate('search')}
+            }}
+        />
+    );
+
     if(!dataStore.weather.weather || !dataStore.weather.city) {
         return (
-            <View>
-                <SafeAreaView>
-                    <UpperText>No weather</UpperText>
-                </SafeAreaView>
-            </View>
+            <Page title="No Weather" navigationBar={navigationBar}></Page>
         );
     }
 
+    const title = <CityTitle city={dataStore.weather.city} />;
+
     return (
-        <SafeAreaView style={styles.page}>
-            <CityTitle
-                style={styles.cityInfo}
-                city={dataStore.weather.city} />
+        <Page style={styles.page} title={title} navigationBar={navigationBar}>
             <Swiper
                 showsPagination={true}
                 dotStyle={styles.dot}
@@ -45,7 +54,7 @@ export const Home = observer(() => {
                     style={styles.slideContainer}
                     weather={dataStore.weather.weather} />
             </Swiper>
-        </SafeAreaView>
+        </Page>
     );
 })
 
@@ -69,11 +78,8 @@ const stylesheet = _.memoize((theme: Theme) => {
             height: 6,
             width: 6
         },
-        cityInfo: {
-            marginTop: 52
-        },
         slideContainer: {
-            marginTop: 48
+            marginTop: 32
         }
     });
 });

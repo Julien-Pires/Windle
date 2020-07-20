@@ -1,13 +1,13 @@
 import _ from 'lodash';
 import React from 'react';
-import { FlatList, StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
+import { FlatList, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
 import { Period } from '../../../modules/time';
 import { DayForecast, Weather } from '../../../modules/weather';
 import { useStores } from '../../../stores';
 import { Theme } from '../../../styles/theme';
-import { UpperText, WeatherConditionIcon } from '../../atoms';
-import { SymbolDisplay, TemperatureHelper } from '../../helpers';
+import { Icon, UpperText } from '../../atoms';
+import { formatTemperature, getWeatherConditionIcon, SymbolDisplay } from '../../helpers';
 import { DividerTitle } from '../../molecules';
 
 export interface WeeklyWeatherInfoProps {
@@ -24,7 +24,7 @@ export const WeeklyWeatherInfo = ({
 
     return (
         <View style={style}>
-            <DividerTitle style={styles.divider}>Weekly Fourecast</DividerTitle>
+            <DividerTitle style={styles.divider}>Weekly Forecast</DividerTitle>
             <FlatList 
                 style={styles.list}
                 scrollEnabled={false}
@@ -53,20 +53,18 @@ const Item = ({
             <UpperText style={styles.itemDay}>
                 { index === 0 ? 'today' : forecast.date.toLocaleString({ weekday: 'long' }) }
             </UpperText>
-            <WeatherConditionIcon
-                condition={forecast.condition}
-                clouds={forecast.clouds}
-                period={Period.Day}
+            <Icon
+                icon={getWeatherConditionIcon(forecast.condition, forecast.clouds, Period.Day)}
                 height={24}
                 width={24} />
             <UpperText style={styles.itemConditionDescription}>
                 { forecast.condition.description }
             </UpperText>
             <UpperText style={styles.itemTemperature}>
-                { TemperatureHelper.format(forecast.maxTemperature, UIStore.temperature, SymbolDisplay.Short) }
+                { formatTemperature(forecast.maxTemperature, UIStore.temperature, SymbolDisplay.Short) }
             </UpperText>
             <UpperText style={styles.itemTemperature}>
-                { TemperatureHelper.format(forecast.minTemperature, UIStore.temperature, SymbolDisplay.Short) }
+                { formatTemperature(forecast.minTemperature, UIStore.temperature, SymbolDisplay.Short) }
             </UpperText>
         </View>
     );

@@ -1,3 +1,3 @@
 export * from './Divider';
+export * from './Icon';
 export * from './UpperText';
-export * from './WeatherConditionIcon';

@@ -1,7 +1,12 @@
+import 'react-native-gesture-handler';
+
 import { AppLoading } from 'expo';
 import React, { useState } from 'react';
 
-import { Home } from './src/components/pages/home';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+
+import * as Pages from './src/components/pages';
 import { loadFonts } from './src/utils/fonts';
 
 export default function App() {
@@ -17,7 +22,15 @@ export default function App() {
     );
   }
 
+  const Stack = createStackNavigator();
+
   return (
-    <Home />
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="home" component={Pages.Home} options={{ headerShown: false }} />
+        <Stack.Screen name="search" component={Pages.Search} options={{ headerShown: false }} />
+        <Stack.Screen name="settings" component={Pages.Settings} options={{ headerShown: false, gestureDirection: 'horizontal-inverted' }} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }

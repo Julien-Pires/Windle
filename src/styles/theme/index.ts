@@ -6,11 +6,11 @@ import { Theme } from './theme';
 export const lightTheme : Theme = {
     ...light,
     font: font
-}
+};
 
 export const darkTheme : Theme = {
     ...dark,
     font: font
-}
+};
 
 export * from './theme';

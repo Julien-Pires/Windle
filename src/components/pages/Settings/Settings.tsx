@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React from 'react';
 
 import { observer } from 'mobx-react-lite';
@@ -6,7 +5,7 @@ import { Page } from '../../layouts';
 import { NavigationBar } from '../../molecules';
 import Icons from '../../../styles/icons';
 
-export const Settings = observer(({navigation}) => {
+export const Settings = observer(({ navigation }) => {
 
     return (
         <Page title="settings" navigationBar={navigationBar(navigation)}>
@@ -21,8 +20,8 @@ const navigationBar = (navigation) => {
             right={{
                 icon: Icons.misc.RightArrow,
                 title: 'home',
-                onPress: _ => {navigation.navigate('home')}
+                onPress: () => {navigation.navigate('home');}
             }}
         />
     );
-}
+};

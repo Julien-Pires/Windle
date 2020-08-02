@@ -5,21 +5,21 @@ const dateFormatOptions = {
     hour12: true,
     hour: 'numeric',
     minute: 'numeric'
-}
+};
 
 const timeFormatOptions = {
     hour12: true,
     hour: 'numeric',
     minute: 'numeric'
-}
+};
 
 export enum DateTimeDisplay {
     DateTime,
     Time
 }
 
-export const formatDate = (date: DateTime, display: DateTimeDisplay) => {
+export const formatDate = (date: DateTime, display: DateTimeDisplay): string => {
     const formatOptions = display === DateTimeDisplay.DateTime ? dateFormatOptions : timeFormatOptions;
 
     return date.toLocaleString(formatOptions);
-}
+};

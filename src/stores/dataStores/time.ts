@@ -8,7 +8,7 @@ export class TimeStore {
     @observable date : DateTime = DateTime.utc();
 
     constructor() {
-        interval(this._refreshRate).subscribe(_ => {
+        interval(this._refreshRate).subscribe(() => {
             this.date = DateTime.utc();
         });
     }

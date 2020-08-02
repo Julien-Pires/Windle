@@ -7,7 +7,7 @@ export interface IconProps extends SvgProps, TouchableOpacityProps {
     icon: React.FC<SvgProps>
 }
 
-export const Icon = (props: IconProps) => {
+export const Icon = (props: IconProps) : JSX.Element => {
     const { icon: SvgIcon, onPress } = props;
 
     if(onPress) {

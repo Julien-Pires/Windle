@@ -4,20 +4,20 @@ import { SymbolDisplay } from './shared';
 export const formatWindSpeed = (
     speed: WindSpeed,
     metrics: WindMetrics,
-    display: SymbolDisplay | undefined) => {
+    display: SymbolDisplay | undefined): string => {
     const symbol = getSymbol(metrics, display ?? SymbolDisplay.Full);
     const value = convertWindSpeed(speed, metrics);
 
     return `${value.toFixed()} ${symbol}`;
-}
+};
 
-export const convertWindSpeed = (speed: WindSpeed, metric: WindMetrics) => {
+export const convertWindSpeed = (speed: WindSpeed, metric: WindMetrics): number => {
     const value = metric == WindMetrics.Kmh  
         ? WindModule.toKilometerPerHour(speed) 
         : WindModule.toMilesPerHour(speed);
 
     return Math.floor(value);
-}
+};
 
 const getSymbol = (measure: WindMetrics, display: SymbolDisplay) => {
     if(display === SymbolDisplay.None) {
@@ -31,4 +31,4 @@ const getSymbol = (measure: WindMetrics, display: SymbolDisplay) => {
         case WindMetrics.Mph:
             return 'mph';
     }
-}
+};

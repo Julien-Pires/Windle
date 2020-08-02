@@ -4,4 +4,4 @@ import misc from './misc';
 export default {
     misc: misc,
     weather: weather
-}
+};

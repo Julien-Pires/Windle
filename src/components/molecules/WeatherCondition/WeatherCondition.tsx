@@ -26,7 +26,7 @@ export const WeatherCondition = observer(({
     const period = getPeriod(weather.date, day.sunrise.time, day.sunset.time);
 
     return (
-        <View style={StyleSheet.flatten([styles.container, style])}>
+        <View style={StyleSheet.flatten([ styles.container, style ])}>
             <Icon
                 icon={ getWeatherConditionIcon(weather.condition, weather.clouds, period) }
                 height='190'
@@ -37,7 +37,7 @@ export const WeatherCondition = observer(({
             <UpperText style={styles.condition}>{weather.condition.description}</UpperText>
         </View>
     );
-})
+});
 
 const stylesheet = _.memoize((theme: Theme) => {
     return StyleSheet.create({

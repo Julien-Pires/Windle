@@ -10,4 +10,4 @@ export default {
     LeftArrow: leftArrow,
     NoIcon: noIcon,
     RightArrow: rightArrow
-}
+};

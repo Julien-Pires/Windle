@@ -14,7 +14,7 @@ export interface WeatherDataItemProps {
     style?: StyleProp<ViewStyle>
 }
 
-export const WeatherDataItem = observer(({
+export const WeatherDataGridItem = observer(({
     data,
     style
 }: WeatherDataItemProps) => {
@@ -33,7 +33,7 @@ export const WeatherDataItem = observer(({
             <UpperText style={styles.value}>{ value }</UpperText>
             <UpperText style={styles.title}>{ getTitle(data) }</UpperText>
         </View>
-    )
+    );
 });
 
 const getTitle = (data: WeatherData) => {
@@ -42,7 +42,7 @@ const getTitle = (data: WeatherData) => {
             return 'current';
             
         case WeatherDataKind.FeelsLikeTemperature:
-            return 'feels like'
+            return 'feels like';
 
         case WeatherDataKind.Humidity:
             return 'humidity';
@@ -54,7 +54,7 @@ const getTitle = (data: WeatherData) => {
             return 'min';
 
         case WeatherDataKind.Pressure:
-            return 'pressure'
+            return 'pressure';
 
         case WeatherDataKind.Sunrise:
             return 'sunrise';
@@ -68,7 +68,7 @@ const getTitle = (data: WeatherData) => {
         case WeatherDataKind.WindSpeed:
             return 'wind';
     }
-}
+};
 
 const stylesheet = _.memoize((theme: Theme) => {
     return StyleSheet.create({

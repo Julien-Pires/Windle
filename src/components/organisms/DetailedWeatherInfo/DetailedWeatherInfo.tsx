@@ -1,10 +1,7 @@
 import React from 'react';
-import _ from 'lodash';
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
 import { Weather } from '../../../modules/weather';
-import { useStores } from '../../../stores';
-import { Theme } from '../../../styles/theme';
 import { DividerTitle, ForecastChart, WeatherDataGrid } from '../../molecules';
 
 export interface DetailedWeatherInfoProps {
@@ -15,12 +12,10 @@ export interface DetailedWeatherInfoProps {
 export const DetailedWeatherInfo = ({
     weather,
     style
-}: DetailedWeatherInfoProps) => {
-    const { UIStore } = useStores();
-    const styles = stylesheet(UIStore.theme);
+}: DetailedWeatherInfoProps) : JSX.Element => {
     const forecasts =
-        [weather.today, ...weather.week]
-            .flatMap(day => day.forecast.map(c => ({ day: day, forecast: c})))
+        [ weather.today, ...weather.week ]
+            .flatMap(day => day.forecast.map(c => ({ day: day, forecast: c })))
             .slice(0, 7)
             .map(({ day, forecast }) => ({
                 ...forecast,
@@ -30,7 +25,7 @@ export const DetailedWeatherInfo = ({
 
     return (
         <View style={style}>
-            <DividerTitle style={styles.divider}>Details</DividerTitle>
+            <DividerTitle style={stylesheet.divider}>Details</DividerTitle>
             <WeatherDataGrid values={[
                 weather.today.sunrise,
                 weather.current.pressure,
@@ -41,21 +36,19 @@ export const DetailedWeatherInfo = ({
                 weather.current.wind.direction
             ]} />
 
-            <DividerTitle style={styles.divider}>Hourly Forecast</DividerTitle>
-            <ForecastChart style={styles.chart} forecasts={forecasts} />
+            <DividerTitle style={stylesheet.divider}>Hourly Forecast</DividerTitle>
+            <ForecastChart style={stylesheet.chart} forecasts={forecasts} />
         </View>
     );
-}
+};
 
-const stylesheet = _.memoize((_: Theme) => {
-    return StyleSheet.create({
-        divider: {
-            marginLeft: 18,
-            marginBottom: 14
-        },
-        chart: {
-            marginLeft: 6,
-            marginRight: 8
-        }
-    });
+const stylesheet = StyleSheet.create({
+    divider: {
+        marginLeft: 18,
+        marginBottom: 14
+    },
+    chart: {
+        marginLeft: 6,
+        marginRight: 8
+    }
 });

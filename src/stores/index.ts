@@ -10,5 +10,5 @@ const storesContext = React.createContext({
     UIStore: uiStore,
 });
 
-export const useStores = () => React.useContext(storesContext);
+export const useStores = () : { dataStore: DataStore, UIStore: UIStore } => React.useContext(storesContext);
 export * from './dataStores';

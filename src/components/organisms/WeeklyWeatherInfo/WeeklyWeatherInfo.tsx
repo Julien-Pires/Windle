@@ -9,13 +9,14 @@ import { Theme } from '../../../styles/theme';
 import { Icon, UpperText } from '../../atoms';
 import { formatTemperature, getWeatherConditionIcon, SymbolDisplay } from '../../helpers';
 import { DividerTitle } from '../../molecules';
+import { observer } from 'mobx-react-lite';
 
 export interface WeeklyWeatherInfoProps {
     weather: Weather,
     style?: StyleProp<ViewStyle>
 }
 
-export const WeeklyWeatherInfo = ({
+export const WeeklyWeatherInfo = observer(({
     weather,
     style
 }: WeeklyWeatherInfoProps) => {
@@ -28,11 +29,11 @@ export const WeeklyWeatherInfo = ({
             <FlatList 
                 style={styles.list}
                 scrollEnabled={false}
-                data={[weather.today,...weather.week]}
+                data={[ weather.today,...weather.week ]}
                 renderItem={ ({ item, index }) => <Item style={styles.listItem} forecast={item} index={index} /> } />
         </View>
     );
-}
+});
 
 interface ItemProps {
     forecast: DayForecast,
@@ -68,7 +69,7 @@ const Item = ({
             </UpperText>
         </View>
     );
-}
+};
 
 const stylesheet = _.memoize((theme: Theme) => {
     return StyleSheet.create({

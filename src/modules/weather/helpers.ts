@@ -79,15 +79,15 @@ export class WindModule {
         }
     ];
 
-    public static toKilometerPerHour(wind: WindSpeed) {
+    public static toKilometerPerHour(wind: WindSpeed): number {
         return wind.value * 4.248;
     }
 
-    public static toMilesPerHour(wind: WindSpeed) {
+    public static toMilesPerHour(wind: WindSpeed) : number {
         return wind.value * 2.64;
     }
 
-    public static toDirection(wind: WindDirection) {
+    public static toDirection(wind: WindDirection) : string {
         const result = this._directions.find(c => wind.value >= c.min && wind.value <= c.max);
 
         return result ? result.direction : 'N';
@@ -95,11 +95,11 @@ export class WindModule {
 }
 
 export class TemperatureModule {
-    public static toCelsius(temperature: Temperature) {
+    public static toCelsius(temperature: Temperature): number {
         return temperature.value - 273.15;
     }
 
-    public static toFahrenheit(temperature: Temperature) {
+    public static toFahrenheit(temperature: Temperature): number {
         return (temperature.value - 273.15) * 9/5 + 32;
     }
 }

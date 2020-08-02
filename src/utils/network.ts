@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import { Result, ResultKind } from './types';
 
-export const query = async (url: string, query: object): Promise<Result<any, string>> => {
+export const query = async (url: string, query: Record<string, unknown>): Promise<Result<unknown, string>> => {
     try {
         const response = await axios.get(url, { params: query });
 
@@ -16,4 +16,4 @@ export const query = async (url: string, query: object): Promise<Result<any, str
             error: exception
         };
     }
-}
+};

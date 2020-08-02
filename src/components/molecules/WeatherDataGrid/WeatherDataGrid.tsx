@@ -1,9 +1,9 @@
 import _ from 'lodash';
 import React from 'react';
-import { StyleProp, View, ViewStyle, StyleSheet } from 'react-native';
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
 import { WeatherData } from '../../../modules/weather';
-import { WeatherDataGridRow } from './WeatherDataRow';
+import { WeatherDataGridRow } from './WeatherDataGridRow';
 
 export interface WeatherDataGridProps {
     values: WeatherData[],
@@ -13,16 +13,16 @@ export interface WeatherDataGridProps {
 export const WeatherDataGrid = ({
     values,
     style
-}: WeatherDataGridProps) => {
-    const rows = _.chunk(values, 3).map(c => (
-        <WeatherDataGridRow style={styles.row} values={c} />
+}: WeatherDataGridProps) : JSX.Element => {
+    const rows = _.chunk(values, 3).map((c, index) => (
+        <WeatherDataGridRow key={`WeatherDataRow_${index}`} style={styles.row} values={c} />
     ));
     return (
         <View style={style}>
             {rows}
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     row: {

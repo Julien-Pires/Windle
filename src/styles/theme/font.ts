@@ -4,15 +4,15 @@ import { FontSizes } from '.';
 
 const lightFont = {
     fontFamily: 'Rehn-Light'
-}
+};
 
 const normalFont = {
     fontFamily: 'Rehn-Medium'
-}
+};
 
 const boldFont = {
     fontFamily: 'Rehn-Bold'
-}
+};
 
 const fontSize = (font: { fontFamily: string }) : FontSizes => ({
     Body1: { ...font, fontSize: 16, lineHeight: 16, height: 16 },
@@ -25,10 +25,10 @@ const fontSize = (font: { fontFamily: string }) : FontSizes => ({
     H4: { ...font, fontSize: 34, lineHeight: 34, height: 34 },
     H5: { ...font, fontSize: 24, lineHeight: 24, height: 24 },
     H6: { ...font, fontSize: 20, lineHeight: 20, height: 20 }
-})
+});
 
 export default {
     light: StyleSheet.create(fontSize(lightFont)),
     normal: StyleSheet.create(fontSize(normalFont)),
     bold: StyleSheet.create(fontSize(boldFont))
-}
+};

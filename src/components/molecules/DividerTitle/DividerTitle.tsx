@@ -25,7 +25,7 @@ export const DividerTitle = observer(({
             <View style={styles.divider} />
         </View>
     );
-})
+});
 
 const stylesheet = _.memoize((theme: Theme) => {
     return StyleSheet.create({
@@ -46,4 +46,4 @@ const stylesheet = _.memoize((theme: Theme) => {
             backgroundColor: theme.colors.onSurface
         }
     });
-})
+});

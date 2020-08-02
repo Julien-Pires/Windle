@@ -49,11 +49,11 @@ export const ForecastChart = pure(({
             </LineChart>
         </View>
     );
-})
+});
 
-const TemperatureLabels = ({ theme, metrics, x, y, data }: any) => {
+const TemperatureLabels = ({ theme, metrics, x, y, data }) => {
     return data.map((value: ForecastChartItem, index: number) => (
-        <G
+        <G key={`TemperatureLabel_${index}`}
             x={ x(index) }
             y={ y(convertTemperature(value.temperature, metrics)) }>
             <Text
@@ -81,13 +81,13 @@ const TemperatureLabels = ({ theme, metrics, x, y, data }: any) => {
     ));
 };
 
-const ConditionIcons = ({ x, height, data }: any) => {
+const ConditionIcons = ({ x, height, data }: unknown) => {
     return data.map((value: ForecastChartItem, index: number) => {
         const period = getPeriod(value.date, value.sunrise.time, value.sunset.time);
         const icon = getWeatherConditionIcon(value.condition, value.clouds, period);
 
         return (
-            <G
+            <G key={`ConditionIcon_${index}`}
                 y={ height - 78 }
                 x={ x(index) - 12 }>
                 <Icon
@@ -97,11 +97,11 @@ const ConditionIcons = ({ x, height, data }: any) => {
             </G>
         );
     });
-}
+};
 
-const Hours = ({ theme, x, height, data }: any) => {
+const Hours = ({ theme, x, height, data }: unknown) => {
     return data.map((value: ForecastChartItem, index: number) => (
-        <Text
+        <Text key={`Hours_${index}`}
             y={ height - 28 }
             x={ x(index) }
             textAnchor={ 'middle' }
@@ -110,4 +110,4 @@ const Hours = ({ theme, x, height, data }: any) => {
             { index === 0 ? 'NOW' : `${value.date.hour}:00` }
         </Text>
     ));
-}
+};

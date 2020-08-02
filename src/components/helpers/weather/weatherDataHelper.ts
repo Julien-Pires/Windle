@@ -14,7 +14,7 @@ import { formatWindSpeed } from './windHelper';
 export const getWeatherConditionIcon = (
     condition: WeatherCondition,
     clouds: Clouds,
-    period: Period) => {
+    period: Period) : React.FC<SvgProps> => {
     const icons = period === Period.Day ? Icons.weather.conditions.day : Icons.weather.conditions.night;
 
     switch(condition.kind) {
@@ -33,7 +33,8 @@ export const getWeatherConditionIcon = (
                 case Clouds.Overcast:
                     return icons.OvercastClouds;
             }
-
+            break;
+        
         case WeatherConditionKind.LightRain:
             return icons.Rain;
 
@@ -56,6 +57,7 @@ export const getWeatherConditionIcon = (
                 case Clouds.Overcast:
                     return icons.Snow;
             }
+            break;
 
         case WeatherConditionKind.Storm:
             return icons.Storm;
@@ -63,6 +65,8 @@ export const getWeatherConditionIcon = (
         case WeatherConditionKind.Tornado:
             return icons.Tornado;
     }
+
+    return Icons.misc.NoIcon;
 };
 
 export const getWeatherDataIcon = (data: WeatherData) : React.FC<SvgProps> => {

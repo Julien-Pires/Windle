@@ -21,7 +21,7 @@ export const CityTitle = observer(({
     const styles = stylesheet(UIStore.theme);
 
     return (
-        <View style={ StyleSheet.flatten([styles.container, style]) }>
+        <View style={ StyleSheet.flatten([ styles.container, style ]) }>
             <UpperText style={ styles.city }>{ city.name }</UpperText>
             <UpperText style={ styles.date }>{ formatDate(city.date, DateTimeDisplay.DateTime) }</UpperText>
         </View>

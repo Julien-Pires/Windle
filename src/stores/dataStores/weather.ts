@@ -21,13 +21,13 @@ export class WeatherStore {
 
         return {
             ...this._city,
-             date: this._timeStore.date.setZone(this._city.timezone)
+            date: this._timeStore.date.setZone(this._city.timezone)
         };
     }
 
     constructor(readonly _timeStore: TimeStore) { }
 
-    async loadWeather(city: string) {
+    async loadWeather(city: string) : Promise<void> {
         const result = await getWeather(city);
         if(result.kind === ResultKind.Failure) {
             return;

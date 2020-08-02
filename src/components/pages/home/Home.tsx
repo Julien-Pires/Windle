@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
-import { Button, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import Swiper from 'react-native-swiper';
 
 import { useStores } from '../../../stores';
@@ -19,11 +19,11 @@ export const Home = observer(({ navigation }) => {
         <NavigationBar
             left={{
                 icon: Icons.misc.Gear,
-                onPress: _ => {navigation.navigate('settings')}
+                onPress: () => {navigation.navigate('settings');}
             }}
             right={{
                 icon: Icons.misc.AddPin,
-                onPress: _ => {navigation.navigate('search')}
+                onPress: () => {navigation.navigate('search');}
             }}
         />
     );
@@ -56,7 +56,7 @@ export const Home = observer(({ navigation }) => {
             </Swiper>
         </Page>
     );
-})
+});
 
 const stylesheet = _.memoize((theme: Theme) => {
     return StyleSheet.create({

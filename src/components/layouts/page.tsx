@@ -23,7 +23,7 @@ export const Page = observer(({
 
     let titleNode : React.ReactNode = title;
     if(typeof title === 'string') {
-        titleNode = (<UpperText style={styles.titleText}>{title}</UpperText>)
+        titleNode = (<UpperText style={styles.titleText}>{title}</UpperText>);
     }
 
     return (

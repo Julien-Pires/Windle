@@ -9,8 +9,8 @@ export interface UpperTextProps {
 export const UpperText = ({
     children,
     style
-}: UpperTextProps) => {
+}: UpperTextProps): JSX.Element => {
     return (
         <Text style={style}>{children.toUpperCase()}</Text>
     );
-}
+};

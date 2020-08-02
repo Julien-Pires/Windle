@@ -7,7 +7,7 @@ import { WeatherData } from '../../../modules/weather';
 import { useStores } from '../../../stores';
 import { Theme } from '../../../styles/theme';
 import { Divider } from '../../atoms';
-import { WeatherDataItem } from './WeatherDataItem';
+import { WeatherDataGridItem } from './WeatherDataGridItem';
 
 export interface WeatherDataGridRowProps {
     values: WeatherData[],
@@ -20,9 +20,9 @@ export const WeatherDataGridRow = observer(({
 }: WeatherDataGridRowProps) => {
     const { UIStore } = useStores();
     const styles = stylesheet(UIStore.theme);
-    const items = values.flatMap(c => [ 
-        (<WeatherDataItem style={styles.item} data={c} />),
-        (<Divider style={styles.divider} />)
+    const items = values.flatMap((c, index) => [ 
+        (<WeatherDataGridItem key={`WeatherData_${index}`} style={styles.item} data={c} />),
+        (<Divider key={`Divider_${index}`} style={styles.divider} />)
     ]);
     
     if(items.length > 2) {

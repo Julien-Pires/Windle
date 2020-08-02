@@ -1,4 +1,4 @@
-import { Temperature, WindSpeed, WindDirection, WeatherDataKind, TemperatureKind } from './models';
+import { Temperature, WindDirection, WindSpeed } from './models';
 
 export class WindModule {
     static readonly _directions = [
@@ -95,11 +95,11 @@ export class WindModule {
 }
 
 export class TemperatureModule {
-    public static toCelsius(temperature: Temperature<TemperatureKind>) {
+    public static toCelsius(temperature: Temperature) {
         return temperature.value - 273.15;
     }
 
-    public static toFahrenheit(temperature: Temperature<TemperatureKind>) {
+    public static toFahrenheit(temperature: Temperature) {
         return (temperature.value - 273.15) * 9/5 + 32;
     }
 }

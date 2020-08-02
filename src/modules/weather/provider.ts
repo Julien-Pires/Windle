@@ -114,11 +114,11 @@ const getHourlyForecast = (data: any, timezone: Zone): HourForecast => {
             kind: WeatherDataKind.Pressure,
             value: data.pressure
         },
-        currentTemperature: {
+        temperature: {
             kind: WeatherDataKind.CurrentTemperature,
             value: data.temp
         },
-        feelsLikeTemperature: {
+        feelsLike: {
             kind: WeatherDataKind.FeelsLikeTemperature,
             value: data.feels_like
         }

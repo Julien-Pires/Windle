@@ -1,6 +1,4 @@
 import * as shape from 'd3-shape';
-import _ from 'lodash';
-import { DateTime } from 'luxon';
 import React from 'react';
 import { StyleProp, View, ViewStyle } from 'react-native';
 import { Circle, G, Text } from 'react-native-svg';
@@ -8,21 +6,16 @@ import { LineChart } from 'react-native-svg-charts';
 import { pure } from 'recompose';
 
 import { getPeriod } from '../../../modules/time';
-import {
-    Clouds, DayForecast, Temperature, TemperatureKind, WeatherCondition
-} from '../../../modules/weather';
+import { HourForecast, Sunrise, Sunset } from '../../../modules/weather';
 import { useStores } from '../../../stores';
 import { Icon } from '../../atoms';
 import {
     convertTemperature, formatTemperature, getWeatherConditionIcon, SymbolDisplay
 } from '../../helpers';
 
-export interface ForecastChartItem {
-    condition: WeatherCondition,
-    clouds: Clouds,
-    date: DateTime,
-    day: DayForecast,
-    temperature: Temperature<TemperatureKind>
+export interface ForecastChartItem extends HourForecast {
+    sunrise: Sunrise,
+    sunset: Sunset
 }
 
 export interface ForecastChartProps {
@@ -48,34 +41,35 @@ export const ForecastChart = pure(({
                 curve={ shape.curveMonotoneX }
                 svg={{ stroke: UIStore.theme.colors.onSurface, strokeWidth: 2 }}
                 contentInset={{ top: 28, bottom: 80, left: 20, right: 20 }}
-                data={ temperatures }>
-                <TemperatureLabels forecasts={forecasts} theme={UIStore.theme} metrics={UIStore.temperature} />
-                <ConditionIcons forecasts={forecasts} />
-                <Hours forecasts={forecasts} theme={UIStore.theme} />
+                data={ forecasts }
+                yAccessor={ ({ index }) => temperatures[index] }>
+                <TemperatureLabels theme={UIStore.theme} metrics={UIStore.temperature} />
+                <ConditionIcons />
+                <Hours theme={UIStore.theme} />
             </LineChart>
         </View>
     );
 })
 
-const TemperatureLabels = ({ forecasts, theme, metrics, x, y, data }: any) => {
-    return data.map((value: any, index: number) => (
+const TemperatureLabels = ({ theme, metrics, x, y, data }: any) => {
+    return data.map((value: ForecastChartItem, index: number) => (
         <G
             x={ x(index) }
-            y={ y(value) }>
+            y={ y(convertTemperature(value.temperature, metrics)) }>
             <Text
                 y={ -34 }
                 fontWeight='bold'
                 fontSize={ theme.font.bold.Body2.fontSize }
                 fill={ theme.colors.onSurface }
                 textAnchor={ 'middle' }>
-                { formatTemperature(forecasts[index].temperature, metrics, SymbolDisplay.Short) }
+                { formatTemperature(value.temperature, metrics, SymbolDisplay.Short) }
             </Text>
             <Text
                 y={ -18 }
                 fontSize={ theme.font.bold.Caption.fontSize }
                 fill={ theme.colors.onSurface }
                 textAnchor={ 'middle' }>
-                30%
+                {`${value.humidity.value}%`}
             </Text>
             <Circle
                 r={ 4 }
@@ -87,10 +81,10 @@ const TemperatureLabels = ({ forecasts, theme, metrics, x, y, data }: any) => {
     ));
 };
 
-const ConditionIcons = ({ forecasts, x, y, height, data }: any) => {
-    return data.map((_: any, index: number) => {
-        const period = getPeriod(forecasts[index].date, forecasts[index].day.sunrise.time, forecasts[index].day.sunset.time);
-        const icon = getWeatherConditionIcon(forecasts[index].condition, forecasts[index].clouds, period);
+const ConditionIcons = ({ x, height, data }: any) => {
+    return data.map((value: ForecastChartItem, index: number) => {
+        const period = getPeriod(value.date, value.sunrise.time, value.sunset.time);
+        const icon = getWeatherConditionIcon(value.condition, value.clouds, period);
 
         return (
             <G
@@ -105,15 +99,15 @@ const ConditionIcons = ({ forecasts, x, y, height, data }: any) => {
     });
 }
 
-const Hours = ({ forecasts, theme, x, y, height, data }: any) => {
-    return data.map((_: any, index: number) => (
+const Hours = ({ theme, x, height, data }: any) => {
+    return data.map((value: ForecastChartItem, index: number) => (
         <Text
             y={ height - 28 }
             x={ x(index) }
             textAnchor={ 'middle' }
             fontSize={ theme.font.bold.Caption.fontSize }
             fill={ theme.colors.onSurface }>
-            { index === 0 ? 'NOW' : `${forecasts[index].date.hour}:00` }
+            { index === 0 ? 'NOW' : `${value.date.hour}:00` }
         </Text>
     ));
 }

@@ -1,10 +1,8 @@
-import {
-    Temperature, TemperatureKind, TemperatureMetrics, TemperatureModule
-} from '../../../modules/weather';
+import { Temperature, TemperatureMetrics, TemperatureModule } from '../../../modules/weather';
 import { SymbolDisplay } from './shared';
 
 export const formatTemperature = (
-    temperature: Temperature<TemperatureKind>,
+    temperature: Temperature,
     metrics: TemperatureMetrics,
     display: SymbolDisplay | undefined) => {
     const symbol = getSymbol(metrics, display ?? SymbolDisplay.Full);
@@ -14,7 +12,7 @@ export const formatTemperature = (
 }
 
 export const convertTemperature = (
-    temperature: Temperature<TemperatureKind>,
+    temperature: Temperature,
     metrics: TemperatureMetrics) => {
     const value = metrics === TemperatureMetrics.Celsius 
         ? TemperatureModule.toCelsius(temperature) 

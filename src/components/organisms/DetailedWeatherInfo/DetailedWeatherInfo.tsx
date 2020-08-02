@@ -1,11 +1,11 @@
-import _ from 'lodash';
 import React from 'react';
+import _ from 'lodash';
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
 import { Weather } from '../../../modules/weather';
 import { useStores } from '../../../stores';
 import { Theme } from '../../../styles/theme';
-import { DividerTitle, WeatherDataGrid, ForecastChart } from '../../molecules';
+import { DividerTitle, ForecastChart, WeatherDataGrid } from '../../molecules';
 
 export interface DetailedWeatherInfoProps {
     weather: Weather,
@@ -19,13 +19,14 @@ export const DetailedWeatherInfo = ({
     const { UIStore } = useStores();
     const styles = stylesheet(UIStore.theme);
     const forecasts =
-        weather
-            .today
-            .forecast
-            .map(c => ({...c, day: weather.today}))
-            .concat(weather.week.flatMap(c => c.forecast.map(d => ({...d, day: c}))))
+        [weather.today, ...weather.week]
+            .flatMap(day => day.forecast.map(c => ({ day: day, forecast: c})))
             .slice(0, 7)
-            .map(c => ({...c, temperature: c.currentTemperature}))
+            .map(({ day, forecast }) => ({
+                ...forecast,
+                sunrise: day.sunrise,
+                sunset: day.sunset
+            }));
 
     return (
         <View style={style}>
@@ -33,7 +34,7 @@ export const DetailedWeatherInfo = ({
             <WeatherDataGrid values={[
                 weather.today.sunrise,
                 weather.current.pressure,
-                weather.current.feelsLikeTemperature,
+                weather.current.feelsLike,
 
                 weather.today.sunset,
                 weather.current.humidity,

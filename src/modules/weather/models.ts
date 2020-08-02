@@ -44,10 +44,14 @@ export enum WeatherConditionKind {
     Tornado
 }
 
-export interface Sun<T extends WeatherDataKind.Sunrise | WeatherDataKind.Sunset> {
+interface Sun<T extends WeatherDataKind.Sunrise | WeatherDataKind.Sunset> {
     kind: T,
     time: DateTime
 }
+
+export type Sunrise = Sun<WeatherDataKind.Sunrise>
+
+export type Sunset = Sun<WeatherDataKind.Sunset>
 
 export interface WindSpeed {
     kind: WeatherDataKind.WindSpeed,
@@ -79,26 +83,39 @@ export interface WeatherCondition {
     description: string
 }
 
-export type TemperatureKind =
-    | WeatherDataKind.CurrentTemperature
-    | WeatherDataKind.FeelsLikeTemperature
-    | WeatherDataKind.MaxTemperature
-    | WeatherDataKind.MinTemperature
-
-export interface Temperature<TempKind extends TemperatureKind> {
+interface TemperatureData<
+    TempKind extends 
+        | WeatherDataKind.CurrentTemperature
+        | WeatherDataKind.FeelsLikeTemperature
+        | WeatherDataKind.MaxTemperature
+        | WeatherDataKind.MinTemperature> {
     kind: TempKind,
     value: number
 }
 
+export type CurrentTemperature = TemperatureData<WeatherDataKind.CurrentTemperature>
+
+export type FeelsLikeTemperature = TemperatureData<WeatherDataKind.FeelsLikeTemperature>
+
+export type MaxTemperature = TemperatureData<WeatherDataKind.MaxTemperature>
+
+export type MinTemperature = TemperatureData<WeatherDataKind.MinTemperature>
+
+export type Temperature =
+    | CurrentTemperature
+    | FeelsLikeTemperature
+    | MaxTemperature
+    | MinTemperature
+
 export type WeatherData =
     | Humidity
     | Pressure
-    | Sun<WeatherDataKind.Sunrise>
-    | Sun<WeatherDataKind.Sunset>
-    | Temperature<WeatherDataKind.CurrentTemperature>
-    | Temperature<WeatherDataKind.MinTemperature>
-    | Temperature<WeatherDataKind.MaxTemperature>
-    | Temperature<WeatherDataKind.FeelsLikeTemperature>
+    | Sunrise
+    | Sunset
+    | CurrentTemperature
+    | MinTemperature
+    | MaxTemperature
+    | FeelsLikeTemperature
     | WindDirection
     | WindSpeed
 
@@ -115,18 +132,18 @@ export interface Forecast {
 }
 
 export interface HourForecast extends Forecast {
-    currentTemperature: Temperature<WeatherDataKind.CurrentTemperature>,
-    feelsLikeTemperature: Temperature<WeatherDataKind.FeelsLikeTemperature>,
+    temperature: CurrentTemperature,
+    feelsLike: FeelsLikeTemperature,
     humidity: Humidity,
     pressure: Pressure
 }
 
 export interface DayForecast extends Forecast {
     forecast: HourForecast[],
-    maxTemperature: Temperature<WeatherDataKind.MaxTemperature>,
-    minTemperature: Temperature<WeatherDataKind.MinTemperature>,
-    sunrise: Sun<WeatherDataKind.Sunrise>,
-    sunset: Sun<WeatherDataKind.Sunset>
+    maxTemperature: MaxTemperature,
+    minTemperature: MinTemperature,
+    sunrise: Sunrise,
+    sunset: Sunset
 }
 
 export interface Weather {

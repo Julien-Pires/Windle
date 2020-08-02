@@ -32,7 +32,7 @@ export const WeatherCondition = observer(({
                 height='190'
                 width='190' />
             <UpperText style={styles.temperature}>
-                { formatTemperature(weather.currentTemperature, UIStore.temperature, SymbolDisplay.Full) }
+                { formatTemperature(weather.temperature, UIStore.temperature, SymbolDisplay.Full) }
             </UpperText>
             <UpperText style={styles.condition}>{weather.condition.description}</UpperText>
         </View>

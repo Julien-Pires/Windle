@@ -1,8 +1,8 @@
 import _ from 'lodash';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
-import { StyleProp, StyleSheet, View, ViewStyle, TextStyle } from 'react-native';
-import { FlatList } from 'react-native-gesture-handler';
+import { StyleProp, StyleSheet, TextStyle, ViewStyle } from 'react-native';
+import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 
 import { getCity } from '../../../modules/city';
 import { City } from '../../../modules/city/types';
@@ -49,12 +49,12 @@ const CityList = ({
     return (
         <FlatList style={style.searchList} data={data} renderItem={({ item }) => {
             return (
-                <View style={style.itemContainer}>
+                <TouchableOpacity style={style.itemContainer}>
                     <TextHighlight 
                         style={style.cityLabel} 
                         text={ `${item.name}, ${item.country.name}` } 
                         prefix={input ?? ''} />
-                </View>
+                </TouchableOpacity>
             );
         }} />
     );
@@ -63,7 +63,8 @@ const CityList = ({
 const stylesheet = _.memoize((theme: Theme) => {
     return StyleSheet.create({
         itemContainer: {
-            marginTop: 20
+            marginTop: 10,
+            marginBottom: 10
         },
         cityLabel: {
             ...theme.font.normal.Body1,

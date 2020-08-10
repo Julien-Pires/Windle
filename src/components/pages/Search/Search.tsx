@@ -1,9 +1,7 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
-import { Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 
-import { getCity } from '../../../modules/city';
-import { City } from '../../../modules/city/types';
 import Icons from '../../../styles/icons';
 import { Page } from '../../layouts';
 import { NavigationBar } from '../../molecules';
@@ -12,7 +10,7 @@ import { SearchCity } from '../../organisms/SearchCity';
 export const Search = observer(({ navigation }) => {
     return (
         <Page title="search" navigationBar={navigationBar(navigation)}>
-            <SearchCity />
+            <SearchCity style={stylesheet} />
         </Page>
     );
 });
@@ -29,10 +27,18 @@ const navigationBar = (navigation) => {
     );
 };
 
-const renderItem = (city: City) => {
-    return (
-        <View>
-            <Text>{city.name}</Text>
-        </View>
-    );
-};
+const stylesheet = StyleSheet.create({
+    searchBox: {
+        justifyContent: 'center',
+        marginTop: 24
+    },
+    searchInput: {
+        marginLeft: 32,
+        marginRight: 32
+    },
+    searchList: {
+        marginTop: 20,
+        marginLeft: 32
+    }
+});
+

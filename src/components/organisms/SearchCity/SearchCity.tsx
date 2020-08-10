@@ -1,35 +1,70 @@
 import _ from 'lodash';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleProp, StyleSheet, View, ViewStyle, TextStyle } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 
 import { getCity } from '../../../modules/city';
 import { City } from '../../../modules/city/types';
-import { Theme } from '../../../styles/theme';
-import { SearchBox } from '../../molecules';
 import { useStores } from '../../../stores';
-import { UpperText } from '../../atoms';
+import { Theme } from '../../../styles/theme';
+import { TextHighlight } from '../../atoms';
+import { SearchBox, SearchBoxStyle } from '../../molecules';
 
-export const SearchCity = observer(() => {
+export interface SearchCityProps {
+    style: SearchBoxStyle & {
+        searchList: StyleProp<ViewStyle>
+    }
+}
+
+export const SearchCity = observer(({
+    style
+}: SearchCityProps) => {
     const { UIStore } = useStores();
     const styles = stylesheet(UIStore.theme);
 
     return (
-        <SearchBox throttle={260} getData={async (text) => await getCity(text)}>
-            <FlatList data={[]} renderItem={({ item }) => CityNameLabel(item, styles.cityLabel)} />
+        <SearchBox 
+            style={style}
+            throttle={260} 
+            getData={async (text) => await getCity(text)}>
+            <CityList style={{ ...styles, ...style }}/>
         </SearchBox>
     );
 });
 
-const CityNameLabel = (city: City, style: any) => {
+const CityList = ({
+    data,
+    input,
+    style
+}: { 
+    style: {
+        cityLabel: StyleProp<TextStyle>,
+        itemContainer: StyleProp<ViewStyle>,
+        searchList: StyleProp<ViewStyle>,
+    },
+    data?: City[], 
+    input?: string
+}) => {
     return (
-        <UpperText style={style.cityLabel}>{ `${city.name}, ${city.country.name}` }</UpperText>
+        <FlatList style={style.searchList} data={data} renderItem={({ item }) => {
+            return (
+                <View style={style.itemContainer}>
+                    <TextHighlight 
+                        style={style.cityLabel} 
+                        text={ `${item.name}, ${item.country.name}` } 
+                        prefix={input ?? ''} />
+                </View>
+            );
+        }} />
     );
 };
 
 const stylesheet = _.memoize((theme: Theme) => {
     return StyleSheet.create({
+        itemContainer: {
+            marginTop: 20
+        },
         cityLabel: {
             ...theme.font.normal.Body1,
             color: theme.colors.onSurface

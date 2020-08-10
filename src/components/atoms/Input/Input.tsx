@@ -18,16 +18,13 @@ export const Input = observer((props: InputProps) => {
     return (
         <View {...props}>
             <View style={styles.background}></View>
-            <TextInput style={styles.input} onChangeText={onChangeText}></TextInput>
+            <TextInput style={styles.input} onChangeText={onChangeText} placeholder="Enter city name..."></TextInput>
         </View>
     );
 });
 
 const stylesheet = _.memoize((theme: Theme) => {
     return StyleSheet.create({
-        container: {
-
-        },
         background: {
             height: 38,
             padding: 6,
